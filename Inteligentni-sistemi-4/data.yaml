@@ -1,0 +1,31 @@
+names:
+- infostan
+- infostan_iznos
+- jotel
+- jotel_uplatnica
+- mts
+- mts_iznos
+- mts_uplatnica
+- racun_za_grejanje
+- racun_za_smece
+- racun_za_struju
+- sbb
+- sbb_iznos
+- sbb_uplatnica
+- stambena_zajednica
+- stambena_zajednica_iznos
+- stambene_usluge_nis
+- stambene_usluge_nis_iznos
+- svrha_uplate
+- uplatnica
+- voda
+nc: 20
+roboflow:
+  license: CC BY 4.0
+  project: inteligentni-sistemi-qpjez
+  url: https://universe.roboflow.com/milanas-workspace-kbobq/inteligentni-sistemi-qpjez/dataset/4
+  version: 4
+  workspace: milanas-workspace-kbobq
+test: ../test/images
+train: ../train/images
+val: ../valid/images
