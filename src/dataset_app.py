@@ -4,6 +4,7 @@ import numpy as np
 import csv
 import base64
 import io
+import json
 from pathlib import Path
 from ultralytics import YOLO
 from PIL import Image
@@ -14,7 +15,11 @@ MODEL_PATH = "/home/milana/Desktop/ocr/best.pt"
 IMAGES_DIR = Path("/home/milana/Desktop/ocr/originalne_slike")
 OUTPUT_DIR = Path("/home/milana/Desktop/ocr/output_rows")
 CSV_PATH = Path("/home/milana/Desktop/ocr/dataset.csv")
+
+# Novi folder u kom čuvamo tačne koordinate nacrtanih oblika na disku
+STATES_DIR = Path("/home/milana/Desktop/ocr/canvas_states")
 OUTPUT_DIR.mkdir(exist_ok=True, parents=True)
+STATES_DIR.mkdir(exist_ok=True, parents=True)
 
 st.set_page_config(page_title="OCR Dataset Creator", layout="wide", page_icon="✂️")
 
@@ -44,15 +49,9 @@ st.markdown("""
     .progress-fill { background: linear-gradient(90deg, #c8a96e, #f0e6c8); height: 100%; border-radius: 4px; }
     hr { border-color: #2a2a2a; }
     label { color: #999 !important; font-size: 0.85rem !important; }
-    
-    /* KLJUČNI CSS: Pravi scroll-box prozor za sliku kada se ona uveća preko Zooma */
-    .canvas-scroll-container {
-        max-width: 100%;
-        max-height: 750px;
-        overflow: auto;
-        border: 1px solid #2a2a2a;
-        border-radius: 8px;
-        background: #141414;
+
+    [data-testid="stVerticalBlock"] > div {
+        overflow-x: auto !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -67,7 +66,15 @@ for key, default in {
     if key not in st.session_state:
         st.session_state[key] = default
 
-# ─── HELPER FUNKCIJE ─────────────────────────────────────────────────────────
+# Brojanje već sačuvanih redova u CSV-u prilikom pokretanja aplikacije
+if st.session_state.saved_count == 0 and CSV_PATH.exists():
+    try:
+        with open(CSV_PATH, 'r', encoding='utf-8') as f:
+            st.session_state.saved_count = sum(1 for _ in f) - 1
+    except:
+        pass
+
+# ─── HELPER FUNKCIJE ZASNOVANE NA DISKU ────────────────────────────────────────
 @st.cache_resource
 def load_yolo():
     return YOLO(MODEL_PATH)
@@ -98,9 +105,32 @@ def sacuvaj_csv(rows_data):
         for row in rows_data:
             writer.writerow([row['path'], row['label'], row['racun_id']])
 
+# Funkcije za trajno pamćenje geometrije sa platna
+def get_state_file_path(racun_id, klasa_ime):
+    return STATES_DIR / f"{racun_id}_{klasa_ime}_state.json"
+
+def ucitaj_geometriju_platna(racun_id, klasa_ime):
+    putanja = get_state_file_path(racun_id, klasa_ime)
+    if putanja.exists():
+        try:
+            with open(putanja, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except:
+            return None
+    return None
+
+def sacuvaj_geometriju_platna(racun_id, klasa_ime, json_data):
+    putanja = get_state_file_path(racun_id, klasa_ime)
+    if json_data and "objects" in json_data and json_data["objects"]:
+        with open(putanja, "w", encoding="utf-8") as f:
+            json.dump(json_data, f, ensure_ascii=False, indent=2)
+    elif putanja.exists():
+        # Ako je korisnik obrisao sve oblike, brišemo i fajl stanja sa diska
+        putanja.unlink()
+
 # ─── HEADER ──────────────────────────────────────────────────────────────────
 st.markdown('<div class="main-title">OCR Dataset Creator</div>', unsafe_allow_html=True)
-st.markdown('<div class="subtitle">Nacrtaj poligon → unesi tekst → sačuvaj u CSV</div>', unsafe_allow_html=True)
+st.markdown('<div class="subtitle">Sve nacrtano se automatski čuva i učitava pri sledećem ulasku! 💾</div>', unsafe_allow_html=True)
 
 yolo = load_yolo()
 images = list(IMAGES_DIR.glob("*.jpg")) + list(IMAGES_DIR.glob("*.jpeg")) + list(IMAGES_DIR.glob("*.png"))
@@ -109,21 +139,20 @@ total = len(images)
 # ─── SIDEBAR ─────────────────────────────────────────────────────────────────
 with st.sidebar:
     st.markdown("### ⚙️ Status")
-    st.markdown("✅ YOLO model učitan")
+    st.markdown("✅ Pamćenje napretka: **UKLJUČENO**")
     st.divider()
     st.markdown("### 📊 Statistike")
     st.markdown(f'<div class="stat">Slika: {st.session_state.current_image_idx + 1}/{total}</div>', unsafe_allow_html=True)
-    st.markdown(f'<div class="stat">Sačuvano redova: {st.session_state.saved_count}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="stat">Ukupno u CSV-u: {st.session_state.saved_count} redova</div>', unsafe_allow_html=True)
     if total > 0:
         pct = int((st.session_state.current_image_idx + 1) / total * 100)
         st.markdown(f'<div class="progress-bar"><div class="progress-fill" style="width:{pct}%"></div></div>', unsafe_allow_html=True)
     st.divider()
-    st.markdown("### 🖱️ Uputstvo")
+    st.markdown("### 💾 Kako radi auto-save?")
     st.markdown("""
-    1. Koristi **Slajder za Zoom** da uvećaš sitna slova.
-    2. Ako slika probije okvir, pojaviće se **scroll-barovi** za kretanje kroz nju!
-    3. Alat **📐 Pomeri / Izmeni oblik** -> Klikni na nacrtani plavi poligon da ga pomeriš.
-    4. Na dnu platna imaš **Toolbar** za Undo i brisanje objekata.
+    - Čim nacrtaš ili izmeniš oblik, aplikacija kreira `.json` fajl za tu regiju.
+    - Možeš slobodno ugasiti terminal, restartovati računar ili promeniti sliku.
+    - Kada se vratiš na istu sliku, **sve te čeka onako kako si ostavila**.
     """)
     st.divider()
     if CSV_PATH.exists():
@@ -199,6 +228,9 @@ region = regions[selected_idx]
 region_img = region["img"]
 rh, rw = region_img.shape[:2]
 
+# Učitavanje starog stanja (ako postoji na disku) za ovu konkretnu kombinaciju slike i regije
+prethodno_stanje = ucitaj_geometriju_platna(racun_id, region["klasa"])
+
 # ─── CANVAS I KONTROLE ───────────────────────────────────────────────────────
 col_left, col_right = st.columns([7, 5])
 
@@ -212,11 +244,9 @@ with col_left:
             format_func=lambda x: "🔷 Novi Poligon" if x == "polygon" else ("⬜ Novi Pravougaonik" if x == "rect" else "📐 Pomeri / Izmeni oblik"),
             horizontal=False)
     with c_zoom:
-        # Povećan maksimalni opseg zuma na 5.0x za ekstremno sitne detalje
-        zoom_factor = st.slider("🔍 Stepen uvećanja (Zoom):", min_value=1.0, max_value=5.0, value=1.8, step=0.1)
+        zoom_factor = st.slider("🔍 Stepen uvećanja (Zoom):", min_value=1.0, max_value=5.0, value=2.0, step=0.1)
 
-    # Radne dimenzije (Slika je u startu komotnija)
-    MAX_W = 1200
+    MAX_W = 1000
     base_scale = min(MAX_W / rw, 4.0)
     final_scale = base_scale * zoom_factor
     
@@ -226,25 +256,29 @@ with col_left:
     region_resized = cv2.resize(region_img, (canvas_w, canvas_h), interpolation=cv2.INTER_CUBIC)
     region_pil = bgr_to_pil(region_resized)
 
-    # Pakujemo platno u HTML/CSS scroll div kontejner
-    st.markdown('<div class="canvas-scroll-container">', unsafe_allow_html=True)
+    # Otvaramo scroll-box kontejner fiksne visine
+    with st.container(height=600):
+        canvas_result = st_canvas(
+            fill_color="rgba(200, 169, 110, 0.15)",
+            stroke_width=2,
+            stroke_color="#c8a96e",
+            background_image=region_pil,
+            update_streamlit=True,
+            height=canvas_h,
+            width=canvas_w,
+            drawing_mode=drawing_mode,
+            display_toolbar=True,
+            point_display_radius=5,
+            # Prosleđujemo prethodno_stanje koje smo pročitali iz JSON fajla!
+            initial_drawing=prethodno_stanje,
+            key=f"canvas_{selected_idx}_{st.session_state.current_image_idx}_z_{zoom_factor}",
+        )
     
-    canvas_result = st_canvas(
-        fill_color="rgba(200, 169, 110, 0.15)",
-        stroke_width=2,
-        stroke_color="#c8a96e",
-        background_image=region_pil,
-        update_streamlit=True,
-        height=canvas_h,
-        width=canvas_w,
-        drawing_mode=drawing_mode,
-        display_toolbar=True,  # Aktivira ugrađeni toolbar na dnu za dodatne akcije
-        point_display_radius=5,
-        key=f"canvas_{selected_idx}_{st.session_state.current_image_idx}_z_{zoom_factor}",
-    )
-    
-    st.markdown('</div>', unsafe_allow_html=True) # zatvaranje scroll kontejnera
-    st.markdown('</div>', unsafe_allow_html=True) # zatvaranje kartice
+    st.markdown('</div>', unsafe_allow_html=True)
+
+# AUTOMATSKO ČUVANJE NA DISK: Čim se registruje bilo kakva promena geometrije na ekranu
+if canvas_result.json_data is not None:
+    sacuvaj_geometriju_platna(racun_id, region["klasa"], canvas_result.json_data)
 
 with col_right:
     st.markdown('<div class="card">', unsafe_allow_html=True)
