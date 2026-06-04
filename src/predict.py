@@ -3,37 +3,44 @@ from ultralytics import YOLO
 from pathlib import Path
 
 def main():
-    # 1. Putanja do tvog istreniranog modela
-    model_path = "/home/milana/Desktop/ocr/best.pt"
-    model = YOLO(model_path)
+    # --- PAMETNO ODREĐIVANJE PUTANJE (ZA TEBE I KOLEGICU) ---
+    TEKUCI_DIR = Path(__file__).resolve().parent
+    BASE_DIR = TEKUCI_DIR.parent if TEKUCI_DIR.name == "src" else TEKUCI_DIR
+
+    # 1. Putanja do istreniranog modela u korenu projekta
+    model_path = BASE_DIR / "best.pt"
     
-    # 2. Putanja do neke test slike računa na tvom laptopu
-    # Stavi ovde putanju do bilo kog računa koji želiš da testiraš
-    img_path = "/home/milana/Desktop/ocr/originalne_slike/struja4.jpg"
+    # 2. Relativna putanja do test slike unutar 'originalne_slike'
+    img_path = BASE_DIR / "originalne_slike" / "struja4.jpg"
     
-    if not Path(img_path).exists():
-        print("Ne postoji putanjna do slike")
-    # 1. Putanja do tvog istreniranog modela
-    model_path = "/home/milana/Desktop/ocr/best.pt"
-    model = YOLO(model_path)
-    
-    # 2. Putanja do neke test slike računa na tvom laptopu
-    # Stavi ovde putanju do bilo kog računa koji želiš da testiraš
-    img_path = "/home/milana/Desktop/ocr/originalne_slike/struja4.jpg"
-    
-    if not Path(img_path).exists():
-        print(f"Slika nije pronađena na putanji: {img_path}")
+    # Putanja do foldera gde se čuvaju isečeni delovi (output)
+    output_dir = BASE_DIR / "output"
+    output_dir.mkdir(exist_ok=True)
+    # --------------------------------------------------------
+
+    # Provera da li model postoji
+    if not model_path.exists():
+        print(f"Model nije pronađen na lokaciji: {model_path}")
+        print("Pobrinite se da 'best.pt' bude u korenu projekta.")
         return
 
-    # 3. Pokretanje YOLO predikcije
-    img = cv2.imread(img_path)
+    # Provera da li slika postoji
+    if not img_path.exists():
+        print(f"Slika nije pronađena na lokaciji: {img_path}")
+        print("Proveri da li se slika 'struja4.jpg' nalazi unutar foldera 'originalne_slike'.")
+        return
+
+    # Učitavanje YOLO modela
+    print(f"Učitavam model: {model_path.name}...")
+    model = YOLO(str(model_path))
+    
+    # Pokretanje YOLO predikcije
+    print(f"Analiziram sliku: {img_path.name}...")
+    img = cv2.imread(str(img_path))
     results = model(img)
     
-    # Kreiramo folder gde ćemo čuvati isečke da ih vidiš očima
-    output_dir = Path("/home/milana/Desktop/ocr/output")
-    output_dir.mkdir(exist_ok=True)
-
-    # 4. Prolazimo kroz sve detektovane kutije
+    # Prolazimo kroz sve detektovane kutije (bounding boxes)
+    brojac_isecaka = 0
     for i, box in enumerate(results[0].boxes):
         # Uzimamo koordinate (x1, y1, x2, y2) kao celobrojne vrednosti
         x1, y1, x2, y2 = map(int, box.xyxy[0])
@@ -42,13 +49,18 @@ def main():
         cls_id = int(box.cls[0])
         class_name = model.names[cls_id]
         
-        # OpenCV sečenje (crop) - sečemo tačan pravougaonik sa slike
+        # OpenCV sečenje (crop)
         cropped_img = img[y1:y2, x1:x2]
         
-        # Čuvamo isečeni region na disk
-        crop_name = f"{class_name}_crop_{i}.jpg"
-        cv2.imwrite(str(output_dir / crop_name), cropped_img)
-        print(f"Isečena klasa [{class_name}] i sačuvana kao {crop_name}")
+        # Provera da li je isečak validan (da nema širinu ili visinu 0)
+        if cropped_img.size > 0:
+            crop_name = f"{class_name}_crop_{i}.jpg"
+            cv2.imwrite(str(output_dir / crop_name), cropped_img)
+            print(f"✓ Isečena klasa [{class_name}] → {crop_name}")
+            brojac_isecaka += 1
+
+    print("\n" + "=" * 40)
+    print(f"Gotovo! Ukupno sačuvano isečaka u '{output_dir.name}': {brojac_isecaka}")
 
 if __name__ == "__main__":
     main()

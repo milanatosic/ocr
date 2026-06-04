@@ -9,13 +9,6 @@ wheels/
 # Virtual environments
 .venv
 
-# DATASET 
-data/
-*.csv
-*.json
-*.jpg
-*.png
-
 # Težine modela
 *.pth
 *.pt

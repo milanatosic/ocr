@@ -9,16 +9,23 @@ from ultralytics import YOLO
 from PIL import Image
 from streamlit_drawable_canvas import st_canvas
 
-# ─── PODEŠAVANJA ─────────────────────────────────────────────────────────────
-MODEL_PATH = "/home/milana/Desktop/ocr/best.pt"
-IMAGES_DIR = Path("/home/milana/Desktop/ocr/originalne_slike")
-OUTPUT_DIR = Path("/home/milana/Desktop/ocr/output_rows")
-CSV_PATH = Path("/home/milana/Desktop/ocr/dataset.csv")
-STATES_DIR = Path("/home/milana/Desktop/ocr/canvas_states")
-CROPS_FILE = Path("/home/milana/Desktop/ocr/canvas_states/pending_crops.json")
+# ─── PODEŠAVANJA (AUTOMATSKO DETEKTOVANJE ZA SVE KORISNIKE) ───────────────────
+# Detektujemo koren projekta (gde se nalazi vaša ocr struktura)
+TEKUCI_DIR = Path(__file__).resolve().parent
+BASE_DIR = TEKUCI_DIR.parent if TEKUCI_DIR.name == "src" else TEKUCI_DIR
 
-for d in [OUTPUT_DIR, STATES_DIR]:
+# Sve putanje su sada relativne u odnosu na projekat
+MODEL_PATH = str(BASE_DIR / "best.pt") # YOLO zahteva string putanju
+IMAGES_DIR = BASE_DIR / "originalne_slike"
+OUTPUT_DIR = BASE_DIR / "output_rows"
+CSV_PATH = BASE_DIR / "dataset.csv"
+STATES_DIR = BASE_DIR / "canvas_states"
+CROPS_FILE = STATES_DIR / "pending_crops.json"
+
+# Automatski kreiramo sve potrebne foldere ako ne postoje u projektu
+for d in [OUTPUT_DIR, STATES_DIR, IMAGES_DIR]:
     d.mkdir(exist_ok=True, parents=True)
+# ─────────────────────────────────────────────────────────────────────────────
 
 st.set_page_config(page_title="OCR Dataset Creator", layout="wide", page_icon="✂️")
 
