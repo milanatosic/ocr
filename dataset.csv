@@ -52,3 +52,131 @@ output_rows/grejanje3_racun_za_grejanje_r4.jpg,Popust po broju dana BEZ GREJANJA
 output_rows/grejanje3_racun_za_grejanje_r5.jpg,Ukupna naknada: 769.76,grejanje3
 output_rows/grejanje3_racun_za_grejanje_r6.jpg,PDV: 76.98,grejanje3
 output_rows/grejanje3_racun_za_grejanje_r7.jpg,Ukupno za račun: 846.74,grejanje3
+output_rows/grejanje6_racun_za_smece_r0.jpg,Naziv i vrsta usluge Datum Količina JM Cena Iznos,grejanje6
+output_rows/grejanje6_racun_za_smece_r1.jpg,Naknada po osnovu toplotne dobiti 31.01.2022 53.000 m2 104.1000 100.00% 5.517.30,grejanje6
+output_rows/grejanje6_racun_za_smece_r2.jpg,"Popust isključenja 90.00% 4,955.57",grejanje6
+output_rows/grejanje6_racun_za_smece_r3.jpg,Kamata:12.87,grejanje6
+output_rows/grejanje6_racun_za_smece_r4.jpg,Ukupna naknada: 551.73,grejanje6
+output_rows/grejanje4_racun_za_grejanje_r5.jpg,Naziv i vrsta usluge Datum Količina ЈМ Cena Iznos,grejanje4
+output_rows/grejanje4_racun_za_grejanje_r6.jpg,Naknada po osnovu toplotne dobiti 31.07.2025 53.00 m2 85.000,grejanje4
+output_rows/grejanje4_racun_za_grejanje_r7.jpg,"Popust isključenje 53.00 m2 76.500 90.00% 4,054.50",grejanje4
+output_rows/grejanje5_racun_za_grejanje_r8.jpg,Naziv i vrsta usluge Datum Količina JM Cena Iznaos,grejanje5
+output_rows/grejanje5_racun_za_grejanje_r9.jpg,"Naknada po osnovu toplotne dobiti 31.01.2025 53.00 m2 85.000 4,505.00",grejanje5
+output_rows/grejanje5_racun_za_grejanje_r10.jpg,Fiksni deo 31.01.2025 53.00 m2 6.572 348.32,grejanje5
+output_rows/grejanje5_racun_za_grejanje_r11.jpg,"Popust isključivanja 53.00 76.500 90.00% 4,054.56",grejanje5
+output_rows/grejanje5_racun_za_grejanje_r12.jpg,KamataČ 15.67,grejanje5
+output_rows/grejanje5_racun_za_grejanje_r13.jpg,Ukupna naknadaČ 798.82,grejanje5
+output_rows/grejanje5_racun_za_grejanje_r14.jpg,Ukupno za račun: 894.37,grejanje5
+output_rows/grejanje5_racun_za_grejanje_r15.jpg,PDV: 79.88,grejanje5
+output_rows/mts2_mts_r0.jpg,Usluga Iznos Popust,mts2
+output_rows/mts2_mts_r1.jpg,"1.Naknada 915,83 632,83",mts2
+output_rows/mts2_mts_uplatnica_r2.jpg,01.02.2026.-28.02.2026.,mts2
+output_rows/mts2_mts_uplatnica_r3.jpg,"=339,60 Din.",mts2
+output_rows/mts2_mts_uplatnica_r4.jpg,97,mts2
+output_rows/mts2_mts_uplatnica_r5.jpg,45-293-066-3170328,mts2
+output_rows/mts2_mts_iznos_r6.jpg,"UKUPNO ZA PLAĆANJE:  339,60",mts2
+output_rows/grejanje7_racun_za_grejanje_r0.jpg,Naziv i vrsta usluge Datum Količina JM Cena Iznos,grejanje7
+output_rows/grejanje7_racun_za_grejanje_r1.jpg,Fiksni deo 31.08.2025 53.00 m2 6.572 348.32,grejanje7
+output_rows/grejanje7_racun_za_grejanje_r2.jpg,"Popust isključenje 53.00 m2 76.500 90.00% 4,054.50",grejanje7
+output_rows/grejanje7_racun_za_grejanje_r3.jpg,Ukupna naknada: 798.82,grejanje7
+output_rows/grejanje7_racun_za_grejanje_r4.jpg,PDV: 79.88,grejanje7
+output_rows/mts18_mts_r0.jpg,"Naknada 915,83 632,83",mts18
+output_rows/mts18_mts_r1.jpg,Usluga Iznos Popust,mts18
+output_rows/mts18_mts_uplatnica_r0.jpg,01.03.2026.-31.03.2026.,mts18
+output_rows/mts18_mts_uplatnica_r1.jpg,"=339,60 Din.",mts18
+output_rows/mts18_mts_uplatnica_r2.jpg,97 73-294-064-3441666,mts18
+output_rows/mts18_mts_iznos_r3.jpg,"UKUPNO YA PLAĆANJE: 339,60",mts18
+output_rows/mts17_mts_r0.jpg,Usluga Iznos Popust,mts17
+output_rows/mts17_mts_r1.jpg,"1.Naknada 915,83 632,83",mts17
+output_rows/mts17_mts_iznos_r2.jpg,"UKUPNO ZA PLAĆANJE: 339,60",mts17
+output_rows/mts17_mts_uplatnica_r3.jpg,01.02.2026.-28.02.2026.,mts17
+output_rows/mts17_mts_uplatnica_r4.jpg,"=339,60 Din.",mts17
+output_rows/mts17_mts_uplatnica_r5.jpg,97 60-293-066-3170323,mts17
+output_rows/mts16_mts_uplatnica_r6.jpg,01.06.2021.-30.06.2021.,mts16
+output_rows/mts16_mts_uplatnica_r7.jpg,"=2.359,00 Din.",mts16
+output_rows/mts16_mts_uplatnica_r8.jpg,97 27-237-019-2185601,mts16
+output_rows/mts16_mts_r9.jpg,Usluga Iznos Popust Osnovica StopaPDV UKUPNO,mts16
+output_rows/mts16_mts_r10.jpg,"1.NAKNADA 1.965,83  1.965,83 20% 393,17 2.359,00",mts16
+output_rows/mts16_mts_iznos_r11.jpg,"UKUPNO ZA PLAĆANJE: 2.359,00",mts16
+output_rows/mts15_mts_r0.jpg,Usluga Iznos Popust Osnovica StopaPDV  PDV,mts15
+output_rows/mts15_mts_r1.jpg,"1.Naknada 1.965,83 1.965,83 20% 393,17",mts15
+output_rows/mts15_mts_uplatnica_r2.jpg,01.03.2021.-31.03.2021.,mts15
+output_rows/mts15_mts_uplatnica_r3.jpg,"=2.359,00 Din.",mts15
+output_rows/mts15_mts_iznos_r4.jpg,"UKUPNO ZA PLAĆANJE: 2.359,00",mts15
+output_rows/mts15_mts_uplatnica_r5.jpg,97 48-234-019-2133749,mts15
+output_rows/mts14_mts_r0.jpg,Usluga Iznos Popust Osnovica StopaPDV  PDV UKUPNO,mts14
+output_rows/mts14_mts_r1.jpg,"1.Naknada 1.109,70 83,33 1.026,37 20% 205,27 1.231,64",mts14
+output_rows/mts14_mts_r2.jpg,"2.Saobraćaj 6,00 6,00 20% 1,20 7,20",mts14
+output_rows/mts14_mts_uplatnica_r3.jpg,01.01.2026.-31.01.2026.,mts14
+output_rows/mts14_mts_uplatnica_r4.jpg,"=1.250,00 Din.",mts14
+output_rows/mts14_mts_uplatnica_r5.jpg,97 27-292-066-3313361,mts14
+output_rows/mts14_mts_iznos_r6.jpg,"UKUPNO ZA PLAĆANJE: 1.250,84",mts14
+output_rows/mts13_mts_r0.jpg,Usluga Iznos Popust,mts13
+output_rows/mts13_mts_r1.jpg,"Naknada 1.965,83 0,00",mts13
+output_rows/mts13_mts_iznos_r2.jpg,"UKUPNO ZA PLAĆANJE: 2.359,00",mts13
+output_rows/mts13_mts_uplatnica_r3.jpg,01.12.2020.-31.12.2020.,mts13
+output_rows/mts13_mts_uplatnica_r4.jpg,"=2.359,00",mts13
+output_rows/mts12_mts_uplatnica_r0.jpg,01.01.2026.-31.01.2026.,mts12
+output_rows/mts12_mts_uplatnica_r1.jpg,"=329,51 Din.",mts12
+output_rows/mts12_mts_uplatnica_r2.jpg,97 67-292-019-3313363,mts12
+output_rows/mts11_mts_r0.jpg,Usluga Iznos Popust Osnovica StopaPDV  PDV,mts11
+output_rows/mts11_mts_r1.jpg,"1.Naknada 1.749,17 1.132,83 919 20% 393,17",mts11
+output_rows/mts11_mts_uplatnica_r2.jpg,01.03.2026.-31.03.2026.,mts11
+output_rows/mts11_mts_uplatnica_r3.jpg,"=739,61 Din.",mts11
+output_rows/mts11_mts_uplatnica_r4.jpg,97 76-294-064-3441665,mts11
+output_rows/mts11_mts_iznos_r5.jpg,"UKUPNO ZA PLAĆANJE: 739,61",mts11
+output_rows/jotel1_jotel_uplatnica_r6.jpg,Шифра Валута Износ Извештај о уплати,jotel1
+output_rows/jotel1_jotel_uplatnica_r7.jpg,189 Дин 1.00,jotel1
+output_rows/jotel1_jotel_uplatnica_r8.jpg,Рачун,jotel1
+output_rows/jotel1_jotel_uplatnica_r9.jpg,265-4010310003394-52,jotel1
+output_rows/jotel1_jotel_uplatnica_r10.jpg,Модел Позив на број,jotel1
+output_rows/jotel1_jotel_uplatnica_r11.jpg,09806000311250108,jotel1
+output_rows/jotel1_jotel_r12.jpg,Р.бр Услуга Период Статус безПДВ Попуст,jotel1
+output_rows/jotel1_jotel_r13.jpg,1. Оптик 1с 11.25 Активан 0.83 0,jotel1
+output_rows/jotel2_jotel_uplatnica_r0.jpg,Шифра Валута Износ Извештај о уплати,jotel2
+output_rows/jotel2_jotel_uplatnica_r1.jpg,"189 Дин 3,160.00",jotel2
+output_rows/jotel2_jotel_uplatnica_r2.jpg,Рачун,jotel2
+output_rows/jotel2_jotel_uplatnica_r3.jpg,265-4010310003394-52,jotel2
+output_rows/jotel2_jotel_uplatnica_r4.jpg,Модел Позив на број,jotel2
+output_rows/jotel2_jotel_uplatnica_r5.jpg,09806000310250108,jotel2
+output_rows/jotel2_jotel_r6.jpg,Р.бр Услуга Период Статус безПДВ Попуст,jotel2
+output_rows/jotel2_jotel_r7.jpg,1. Оптик 1с 10.25 Активан 2.633.33 0,jotel2
+output_rows/jotel3_jotel_r0.jpg,1. Оптик 1с 1.26 Активан 0.833 0,jotel3
+output_rows/jotel3_jotel_r1.jpg,Р.бр Услуга Период Статус безПДВ Попуст,jotel3
+output_rows/jotel3_jotel_uplatnica_r2.jpg,Шифра Валута Износ Извештај о уплати,jotel3
+output_rows/jotel3_jotel_uplatnica_r3.jpg,189 Дин 1.00,jotel3
+output_rows/jotel3_jotel_uplatnica_r4.jpg,Рачун,jotel3
+output_rows/jotel3_jotel_uplatnica_r5.jpg,265-4010310003394-52,jotel3
+output_rows/jotel3_jotel_uplatnica_r6.jpg,Модел Позив на број,jotel3
+output_rows/jotel3_jotel_uplatnica_r7.jpg,09806000301260108,jotel3
+output_rows/mts1_mts_uplatnica_r8.jpg,01.02.2026.-28.02.2026.,mts1
+output_rows/mts1_mts_uplatnica_r9.jpg,"=329,51 Din.",mts1
+output_rows/mts1_mts_uplatnica_r10.jpg,97 82-293-019-3170331,mts1
+output_rows/mts10_mts_r0.jpg,Usluga Iznos Popust Osnovica,mts10
+output_rows/mts10_mts_r1.jpg,"1.Naknada 1.965,83 1.965,831.Naknada 915,83 632,83 283,00",mts10
+output_rows/mts10_mts_uplatnica_r2.jpg,01.02.2026.-28.02.2026.,mts10
+output_rows/mts10_mts_uplatnica_r3.jpg,"=339,60 Din.",mts10
+output_rows/mts10_mts_uplatnica_r4.jpg,97 68-293-064-3281990,mts10
+output_rows/mts10_mts_uplatnica_r5.jpg,97 68-293-064-3281990,mts10
+output_rows/mts10_mts_iznos_r6.jpg,"UKUPNO ZA PLAĆANJE: 339,60",mts10
+output_rows/jotel5_jotel_r0.jpg,Р.бр Услуга Период Статус безПДВ  Р.бр Услуга Период Статус безПДВ,jotel5
+output_rows/jotel5_jotel_r1.jpg,1. Оптик 1с 11.25 Активан 0.83,jotel5
+output_rows/jotel5_jotel_uplatnica_r2.jpg,265-4010310003394-52,jotel5
+output_rows/jotel5_jotel_uplatnica_r3.jpg,Модел Позив на број,jotel5
+output_rows/jotel5_jotel_uplatnica_r4.jpg,09806000303260108,jotel5
+output_rows/jotel4_jotel_uplatnica_r5.jpg,Шифра Валута Износ Извештај о уплати,jotel4
+output_rows/jotel4_jotel_uplatnica_r6.jpg,189 Дин 1.00,jotel4
+output_rows/jotel4_jotel_uplatnica_r7.jpg,Рачун,jotel4
+output_rows/jotel4_jotel_uplatnica_r8.jpg,265-4010310003394-52,jotel4
+output_rows/jotel4_jotel_uplatnica_r9.jpg,Модел Позив на број,jotel4
+output_rows/jotel4_jotel_uplatnica_r10.jpg,09806000302260108,jotel4
+output_rows/jotel4_jotel_r11.jpg,Р.бр Услуга Период Статус безПДВ Попуст,jotel4
+output_rows/jotel4_jotel_r12.jpg,1. Оптик 1с 2.26 Активан 0.83 0,jotel4
+output_rows/grejanje8_racun_za_grejanje_r13.jpg,Nazi i vrsta usluge Datum Količina,grejanje8
+output_rows/grejanje8_racun_za_grejanje_r14.jpg,Naknada po osnovu toplotne dobiti 31.05.2025 53.00,grejanje8
+output_rows/grejanje8_racun_za_grejanje_r15.jpg,Fiksni deo 31.05.2025 53.00,grejanje8
+output_rows/grejanje8_racun_za_grejanje_r16.jpg,Popust isljučenje 53.00,grejanje8
+output_rows/grejanje9_racun_za_grejanje_r0.jpg,Naziv i vrsta usluge Datum Količina JM,grejanje9
+output_rows/grejanje9_racun_za_grejanje_r1.jpg,Naknada po osnovu toplotne dobiti 31.05.2025 53.00 m2,grejanje9
+output_rows/grejanje9_racun_za_grejanje_r2.jpg,Fiksni deo 31.05.2025 53.00 m2,grejanje9
+output_rows/grejanje9_racun_za_grejanje_r3.jpg,Popust isljučenje 53.00 m2,grejanje9
