@@ -657,3 +657,8 @@ output_rows/odrzavanje_zgrade15_stambena_zajednica_r4.jpg,"000020 INVESTICIONO O
 output_rows/odrzavanje_zgrade15_stambena_zajednica_r5.jpg,"000021 NAKNADA ZA RAD PROFESIONALNOG MES 1,000 410,60 0,00",odrzavanje_zgrade15
 output_rows/odrzavanje_zgrade15_stambena_zajednica_r6.jpg,UPRAVNIK,odrzavanje_zgrade15
 output_rows/odrzavanje_zgrade15_stambena_zajednica_r7.jpg,"000024 PREMIJA OSIGURANJA MES 1,000 116,82 0,00",odrzavanje_zgrade15
+output_rows/struja76_racun_za_struju_r0.jpg,ПОТРОШЊА У ОБРАЧУНСКОМ ПЕРИОДУ 291kWh,struja76
+output_rows/struja76_racun_za_struju_r1.jpg,"A УКУПНО ЗАДУЖЕЊЕ ЗА ОБРАЧУНСКИ ПЕРИОД 2.696,88 дин.",struja76
+output_rows/struja76_racun_za_struju_r2.jpg,"Б ДУГ ИЗ ПРЕТХОДНОГ ОБРАЧУНСКОГ ПЕРИОДА 4.043,66 дин.",struja76
+output_rows/struja76_racun_za_struju_r3.jpg,"В ЗА УПЛАТУ ЗА ЕЛЕКТРИЧНУ ЕНЕРГИЈУ (А+Б) и ЗП 6.903,60 дин.",struja76
+output_rows/struja76_racun_za_struju_r4.jpg,Рок за плаћање 28.10.2020,struja76
