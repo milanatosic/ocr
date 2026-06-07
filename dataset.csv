@@ -1004,3 +1004,92 @@ output_rows/struja46_racun_za_struju_r12.jpg,"Нижа тарифа (НТ) 26 2,
 output_rows/struja46_racun_za_struju_r13.jpg,Једнотарифно(ЈТ),struja46
 output_rows/struja46_racun_za_struju_r14.jpg,"Остварена просечна цена електричне енергије (дин/kWh): 11,69",struja46
 output_rows/struja46_racun_za_struju_r15.jpg,"4 ЗАДУЖЕЊЕ ЗА ЕЛЕКТРИЧНУ ЕНЕРГИЈУ У ОБРАЧУНСКОМ ПЕРИОДУ(1+2+3) 1.250,30",struja46
+output_rows/odrzavanje_zgrade18_stambena_zajednica_r0.jpg,Bar Cene bez % Iznos,odrzavanje_zgrade18
+output_rows/odrzavanje_zgrade18_stambena_zajednica_r1.jpg,Šifra Naziv artikla kod JM KOL PDV Rabat PDV PDV,odrzavanje_zgrade18
+output_rows/odrzavanje_zgrade18_stambena_zajednica_r2.jpg,"000019 TEKUĆE ODRŽAVANJE MES 1,000 661,00 0,00 0% 0,00",odrzavanje_zgrade18
+output_rows/odrzavanje_zgrade18_stambena_zajednica_r3.jpg,"000020 INVESTICIONO ODRŽAVANJE M2 53,000 14,32 0,00 0% 0,00",odrzavanje_zgrade18
+output_rows/odrzavanje_zgrade18_stambena_zajednica_r4.jpg,"000021 NAKNADA ZA RAD PROFESIONALNOG MES 1,000 474,56 0,00 0% 0,00",odrzavanje_zgrade18
+output_rows/odrzavanje_zgrade18_stambena_zajednica_r5.jpg,UPRAVNIK,odrzavanje_zgrade18
+output_rows/odrzavanje_zgrade18_stambena_zajednica_r6.jpg,"000024 PREMIJA OSIGURANJA MES 1,000 117,17 0,00 0% 0,00",odrzavanje_zgrade18
+output_rows/odrzavanje_zgrade18_stambena_zajednica_iznos_r7.jpg,"Vaše dugovanje sa ovim računom iznosi: 2.826,09 RSD",odrzavanje_zgrade18
+output_rows/odrzavanje_zgrade19_stambena_zajednica_r0.jpg,Šifra Naziv artikla,odrzavanje_zgrade19
+output_rows/odrzavanje_zgrade19_stambena_zajednica_r1.jpg,"000019 TEKUĆE ODRŽAVANJE MES 1,000 661,00 0,00 0% 0,00",odrzavanje_zgrade19
+output_rows/odrzavanje_zgrade19_stambena_zajednica_r2.jpg,"000020 INVESTICIONO ODRŽAVANJE M2 53,000 14,32 0,00 0% 0,00",odrzavanje_zgrade19
+output_rows/odrzavanje_zgrade19_stambena_zajednica_r3.jpg,"000021 NAKNADA ZA RAD PROFESIONALNOG MES 1,000 474,56 0,00 0% 0,00",odrzavanje_zgrade19
+output_rows/odrzavanje_zgrade19_stambena_zajednica_r4.jpg,"000024 PREMIJA OSIGURANJA MES 1,000 116,60 0,00 0% 0,00",odrzavanje_zgrade19
+output_rows/odrzavanje_zgrade19_stambena_zajednica_iznos_r5.jpg,"Vaše dugovanje sa ovim računom iznosi: 2.011,12 RSD",odrzavanje_zgrade19
+output_rows/odrzavanje_zgrade2_stambena_zajednica_iznos_r0.jpg,"Vaše dugovanje sa ovim računom iznosi: 3.511,54 RSD",odrzavanje_zgrade2
+output_rows/odrzavanje_zgrade2_stambena_zajednica_r1.jpg,"000019 TEKUĆE ODRŽAVANJE MES 1,000 571,91 0,00 0% 0,00",odrzavanje_zgrade2
+output_rows/odrzavanje_zgrade2_stambena_zajednica_r2.jpg,"000020 INVESTICIONO ODRŽAVANJE M2 53,000 12,39 0,00 0% 0,00",odrzavanje_zgrade2
+output_rows/odrzavanje_zgrade2_stambena_zajednica_r3.jpg,"000021 NAKNADA ZA RAD PROFESIONALNOG MES 1,000 350,60 0,00 0% 0,00",odrzavanje_zgrade2
+output_rows/odrzavanje_zgrade2_stambena_zajednica_r4.jpg,UPRAVNIK,odrzavanje_zgrade2
+output_rows/odrzavanje_zgrade2_stambena_zajednica_r5.jpg,"MES 1,000 116,82 0,00 0% 0,00",odrzavanje_zgrade2
+output_rows/odrzavanje_zgrade3_stambena_zajednica_iznos_r0.jpg,"Vaše dugovanje sa ovim računom iznosi: 2.211,70 RSD",odrzavanje_zgrade3
+output_rows/odrzavanje_zgrade4_stambena_zajednica_r0.jpg,"000019 TEKUĆE ODRŽAVANJE MES 1,000 661,00 0,00",odrzavanje_zgrade4
+output_rows/odrzavanje_zgrade4_stambena_zajednica_r1.jpg,"000020 INVESTICIONO ODRŽAVANJE M2 53,000 14,32 0,00",odrzavanje_zgrade4
+output_rows/odrzavanje_zgrade4_stambena_zajednica_r2.jpg,"000021 NAKNADA ZA RAD PROFESIONALNOG MES 1,000 474,56 0,00",odrzavanje_zgrade4
+output_rows/odrzavanje_zgrade4_stambena_zajednica_r3.jpg,UPRAVNIK,odrzavanje_zgrade4
+output_rows/odrzavanje_zgrade4_stambena_zajednica_r4.jpg,"MES 1,000 116,60 0,00",odrzavanje_zgrade4
+output_rows/odrzavanje_zgrade4_stambena_zajednica_iznos_r5.jpg,"Vaše dugovanje sa ovim računom iznosi: 2.011,12 RSD",odrzavanje_zgrade4
+output_rows/odrzavanje_zgrade7_stambena_zajednica_r0.jpg,"000020 INVESTICIONO ODRŽAVANJE M2 53,000 8,94 0,00 0%",odrzavanje_zgrade7
+output_rows/odrzavanje_zgrade7_stambena_zajednica_r1.jpg,"000019 TEKUĆE ODRŽAVANJE MES 1,000 412,71 0,00 0%",odrzavanje_zgrade7
+output_rows/odrzavanje_zgrade7_stambena_zajednica_r2.jpg,"000021 NAKNADA ZA RAD PROFESIONALNOG MES 1,000 350,00 0,00 0%",odrzavanje_zgrade7
+output_rows/odrzavanje_zgrade7_stambena_zajednica_r3.jpg,UPRAVNIK,odrzavanje_zgrade7
+output_rows/odrzavanje_zgrade7_stambena_zajednica_r4.jpg,"000024 PREMIJA OSIGURANJA KOM 1,000 117,16 0,00 0%",odrzavanje_zgrade7
+output_rows/odrzavanje_zgrade7_stambena_zajednica_iznos_r0.jpg,"Vaše dugovanje sa ovim računom iznosi: 8.765,02 RSD",odrzavanje_zgrade7
+output_rows/odrzavanje_zgrade9_stambena_zajednica_iznos_r0.jpg,"Vaše dugovanje sa ovim računom iznosi: 2.011,12 RSD",odrzavanje_zgrade9
+output_rows/smece1_racun_za_smece_r0.jpg,Naziv i vrsta Datum Količina JM Cena Iznos,smece1
+output_rows/smece1_racun_za_smece_r1.jpg,Smeće stanb-posl.  31.01.2025 53.00 m2 8.230 436.19,smece1
+output_rows/smece1_racun_za_smece_r2.jpg,Kamata:9.49,smece1
+output_rows/smece1_racun_za_smece_r3.jpg,Ukupna naknada: 436.19,smece1
+output_rows/smece1_racun_za_smece_r4.jpg,PDV: 43.62,smece1
+output_rows/smece1_racun_za_smece_r5.jpg,Ukupno za račun: 489.30,smece1
+output_rows/smece10_racun_za_smece_r0.jpg,Naziv i vrsta Datum Količina JM Cena Iznos,smece10
+output_rows/smece10_racun_za_smece_r1.jpg,Smeće stanb-posl. 30.04.2022 53.000 m2 5.4600 289.38,smece10
+output_rows/smece10_racun_za_smece_r2.jpg,Ukupna naknada: 289.38,smece10
+output_rows/smece10_racun_za_smece_r3.jpg,PDV: 28.94,smece10
+output_rows/smece10_racun_za_smece_r4.jpg,Ukupno za račun: 318.32,smece10
+output_rows/smece13_racun_za_smece_r0.jpg,Naziv i vrsta Datum Količina JM Cena Iznos,smece13
+output_rows/smece13_racun_za_smece_r1.jpg,Smeće stanb-posl.  31.05.2025 53.00 m2 8.230 436.19,smece13
+output_rows/smece13_racun_za_smece_r2.jpg,Kamata:1.36,smece13
+output_rows/smece13_racun_za_smece_r3.jpg,Ukupna naknada: 436.19,smece13
+output_rows/smece13_racun_za_smece_r4.jpg,PDV: 43.62,smece13
+output_rows/smece13_racun_za_smece_r5.jpg,Ukupno za račun: 481.17,smece13
+output_rows/smece2_racun_za_smece_r0.jpg,Naziv i vrsta Datum Količina JM Cena Iznos,smece2
+output_rows/smece2_racun_za_smece_r1.jpg,Kamata:4.15,smece2
+output_rows/smece2_racun_za_smece_r2.jpg,Ukupna naknada: 436.19,smece2
+output_rows/smece2_racun_za_smece_r3.jpg,PDV: 43.62,smece2
+output_rows/smece2_racun_za_smece_r4.jpg,Ukupno za račun: 483.96,smece2
+output_rows/smece3_racun_za_smece_r0.jpg,Naziv i vrsta Datum Količina JM Cena Izno,smece3
+output_rows/smece3_racun_za_smece_r1.jpg,Smeće stanb-posl.  31.06.2025 53.00 m2 8.230 436.1,smece3
+output_rows/smece3_racun_za_smece_r2.jpg,Ukupna naknada: 436.1,smece3
+output_rows/smece3_racun_za_smece_r3.jpg,PDV: 43.62,smece3
+output_rows/smece3_racun_za_smece_r4.jpg,Ukupno za račun: 479.8,smece3
+output_rows/smece4_racun_za_smece_r0.jpg,Naziv i vrsta Datum Količina JM Cena Iznos,smece4
+output_rows/smece4_racun_za_smece_r1.jpg,Smeće stanb-posl.  31.10.2025 53.00 m2 8.230 436.19,smece4
+output_rows/smece4_racun_za_smece_r2.jpg,Ukupna naknada: 436.19,smece4
+output_rows/smece4_racun_za_smece_r3.jpg,PDV: 43.62,smece4
+output_rows/smece4_racun_za_smece_r4.jpg,Ukupno za račun: 479.81,smece4
+output_rows/smece5_racun_za_smece_r0.jpg,Naziv i vrsta Datum Količina JM Cena Iznos,smece5
+output_rows/smece5_racun_za_smece_r1.jpg,Smeće stanb-posl. 28.02.2025 53.00 m2 8.230 436.19,smece5
+output_rows/smece5_racun_za_smece_r2.jpg,Ukupna naknada: 436.19,smece5
+output_rows/smece5_racun_za_smece_r3.jpg,PDV: 43.62,smece5
+output_rows/smece5_racun_za_smece_r4.jpg,Ukupno za račun: 479.81,smece5
+output_rows/smece6_racun_za_smece_r0.jpg,Naziv i vrsta Datum Količina JM Cena,smece6
+output_rows/smece6_racun_za_smece_r1.jpg,Smeće stanb-posl.  31.03.2026 53.00 m2 8.230,smece6
+output_rows/smece6_racun_za_smece_r2.jpg,Ukupna naknada: 436.19,smece6
+output_rows/smece6_racun_za_smece_r3.jpg,PDV: 43.62,smece6
+output_rows/smece6_racun_za_smece_r4.jpg,Ukupno za račun: 479.81,smece6
+output_rows/smece7_racun_za_smece_r0.jpg,Naziv i vrsta Datum Količina JM Cena,smece7
+output_rows/smece7_racun_za_smece_r1.jpg,Smeće stanb-posl.  31.01.2026 53.00 m2 8.230,smece7
+output_rows/smece8_racun_za_smece_r0.jpg,Naziv i vrsta Datum Količina JM Cena Iznos,smece8
+output_rows/smece8_racun_za_smece_r1.jpg,Smeće stanb-posl.  31.08.2020 53.00 m2 5.4500 289.3,smece8
+output_rows/smece8_racun_za_smece_r2.jpg,Kamata:6.05,smece8
+output_rows/smece8_racun_za_smece_r3.jpg,Ukupna naknada: 289.38,smece8
+output_rows/smece8_racun_za_smece_r4.jpg,PDV: 28.94,smece8
+output_rows/smece8_racun_za_smece_r5.jpg,Ukupno za račun: 324.37,smece8
+output_rows/smece9_racun_za_smece_r0.jpg,Naziv i vrsta Datum Količina JM Cena Iznos,smece9
+output_rows/smece9_racun_za_smece_r1.jpg,Smeće stanb-posl.  30.09.2025 53.00 m2 8.230 436.19,smece9
+output_rows/smece9_racun_za_smece_r2.jpg,Ukupna naknada: 436.19,smece9
+output_rows/smece9_racun_za_smece_r3.jpg,PDV: 43.62,smece9
+output_rows/smece9_racun_za_smece_r4.jpg,Ukupno za račun: 479.81,smece9
