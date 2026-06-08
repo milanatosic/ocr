@@ -18,8 +18,16 @@ import os
 from model import CRNN
 from dataset import OCRDataset, collate_fn, NUM_CLASSES, decode_prediction
 from test_validation_train_split import analiziraj_i_podeli_po_korenu
+import sys
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+IN_COLAB = "google.colab" in sys.modules
+
+if IN_COLAB:
+    # Ako smo na Colabu, znamo tačnu putanju do projekta
+    BASE_DIR = Path("/content/is_projekat")
+else:
+    # Ako smo lokalno, uzimamo folder iznad src-a
+    BASE_DIR = Path(__file__).resolve().parent.parent
 
 # ── Konfiguracija ─────────────────────────────────────────────────────────────
 CONFIG = {
@@ -128,18 +136,6 @@ def evaluate(model, loader, ctc_loss):
 
 def train():
     # ── Dataset ───────────────────────────────────────────────────────────────
-    full_dataset = OCRDataset(
-        CONFIG["csv_path"],
-        CONFIG["base_dir"],
-        min_height=CONFIG["min_height"],
-        augment=False
-    )
-
-    total = len(full_dataset)
-    train_n = int(total * CONFIG["train_ratio"])
-    val_n = int(total * CONFIG["val_ratio"])
-    test_n = total - train_n - val_n
-
     train_ds, val_ds, test_ds = analiziraj_i_podeli_po_korenu(CONFIG["csv_path"])
 
     # Snimamo ih u privremene CSV fajlove kako bi tvoj OCRDataset mogao da ih učita
