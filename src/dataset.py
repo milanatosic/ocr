@@ -12,13 +12,15 @@ from pathlib import Path
 
 # ── Karakter set ──────────────────────────────────────────────────────────────
 CHARS = (
-    " %()*+,-./:=?"
-    "0123456789"
-    "ABCDEFGHIJKLMNOPRSTUVWZabcdefghijklmnoprstuvyz"
-    "ĆćčđŠšŽž"
-    "ЂЈЊЋАБВГДЕЖЗИКЛМНОПРСТУФХЦЧШабвгдежзиклмнопрстуфхцчшјњћ"
+    " !\"#$%&'()*+,-./:;<=>?@"  # specijalni
+    "0123456789"                  # brojevi
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"  # latinica velika
+    "abcdefghijklmnopqrstuvwxyz"  # latinica mala
+    "ČčĆćŠšŽžĐđ"                 # srpska latinica
+    "АБВГДЂЕЖЗИЈКЛЉМНЊОПРСТЋУФХЦЧЏШ"  # ćirilica velika
+    "абвгдђежзијклљмњопрстћуфхцчџш"    # ćirilica mala
 )
-BLANK = 0  # CTC blank token
+BLANK = 0  # CTC blank token, ne znaci razmak, vec nema karaktera ovde
 CHAR_TO_IDX = {c: i + 1 for i, c in enumerate(CHARS)}  # 0 je blank
 IDX_TO_CHAR = {i + 1: c for i, c in enumerate(CHARS)}
 NUM_CLASSES = len(CHARS) + 1  # +1 za blank
@@ -41,6 +43,9 @@ def decode_prediction(logits):
     """
     CTC greedy dekodiranje.
     logits: [T, num_classes] numpy array ili tensor
+    Za svaki vremenski korak uzmi karakter sa najvecom verovatnocom
+    Spoji uzastopne karaktere u jedan
+    Ukloni blank tokene
     """
     if isinstance(logits, torch.Tensor):
         logits = logits.detach().cpu().numpy()
@@ -66,6 +71,10 @@ def preprocess_image(img_bgr, target_height=IMG_HEIGHT, max_width=IMG_WIDTH):
     2. Resize na target_height, čuvajući proporcije
     3. Pad ili crop na max_width
     4. Normalizacija [0, 1]
+    Sve slike moraju biti iste velicine za batch procesiranje. 
+    Visina je uvek 48px. Sirina je proporcionalna originalu ali maksimalno 768px - 
+    krace slike se dopunjuju belim pikselima sa desna(padding). Model uci da ignorise padding jer
+    tamo nema teksta
     """
     # Grayscale
     if len(img_bgr.shape) == 3:
@@ -91,7 +100,7 @@ def preprocess_image(img_bgr, target_height=IMG_HEIGHT, max_width=IMG_WIDTH):
         result = resized
 
     # Normalizacija
-    result = result.astype(np.float32) / 255.0
+    result = result.astype(np.float32) / 255.0 # pikseli slike su celi brojevi od 0-255
 
     return result
 
@@ -119,7 +128,7 @@ class OCRDataset(Dataset):
             img_path = self.base_dir / row['image_path']
             if not img_path.exists():
                 continue
-            img = cv2.imread(str(img_path))
+            img = cv2.imread(str(img_path)) #ucitaj sliku
             if img is None:
                 continue
             if img.shape[0] < min_height:
@@ -147,12 +156,12 @@ class OCRDataset(Dataset):
         if self.augment:
             img = self._augment(img)
 
-        processed = preprocess_image(img)
+        processed = preprocess_image(img) # resize + pad + normalizacija
         if processed is None:
             processed = np.zeros((IMG_HEIGHT, IMG_WIDTH), dtype=np.float32)
 
-        img_tensor = torch.tensor(processed).unsqueeze(0)  # [1, H, W]
-        label_encoded = encode_label(label_str)
+        img_tensor = torch.tensor(processed).unsqueeze(0)  # dodaj kanal dimenziju [1, H, W]
+        label_encoded = encode_label(label_str) # string -> indeksi
 
         if len(label_encoded) == 0:
             label_encoded = [1]  # fallback
@@ -185,6 +194,9 @@ def collate_fn(batch):
     Custom collate za CTC loss:
     - Slike su već iste veličine (paddovane)
     - Labele su različitih dužina -> čuvamo kao 1D tensor + lengths
+    CTC loss ne prima listu labela razlicitih duzina nego jedan veliki 1D tensor svih labela
+    zalepljenih jedna za drugu plus listu duzina da zna gde koja pocinje i zavrsava.
+    Npr. labele ["AB", "CDE"] -> [2, 3, 4, 5, 6] + duzine [2, 3]
     """
     imgs, labels, label_strs = zip(*batch)
 

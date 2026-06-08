@@ -15,12 +15,15 @@ from tqdm import tqdm
 
 from crnn_model import CRNN
 from dataset import OCRDataset, collate_fn, NUM_CLASSES, decode_prediction
+from test_validation_train_split import analiziraj_i_podeli_po_korenu
+
+BASE_DIR = Path(__file__).resolve().parent
 
 # ── Konfiguracija ─────────────────────────────────────────────────────────────
 CONFIG = {
-    "csv_path":       "/home/milana/Desktop/ocr/dataset.csv",
-    "base_dir":       "/home/milana/Desktop/ocr",
-    "output_dir":     "/home/milana/Desktop/ocr/checkpoints",
+    "csv_path":       str(BASE_DIR / "dataset.csv"),
+    "base_dir":       str(BASE_DIR),
+    "output_dir":     str(BASE_DIR / "checkpoints"),
 
     "img_height":     48,
     "img_width":      768,
@@ -108,10 +111,7 @@ def train():
     val_n = int(total * CONFIG["val_ratio"])
     test_n = total - train_n - val_n
 
-    train_ds, val_ds, test_ds = random_split(
-        full_dataset, [train_n, val_n, test_n],
-        generator=torch.Generator().manual_seed(42)
-    )
+    train_ds, val_ds, test_ds = analiziraj_i_podeli_po_korenu(CONFIG["csv_path"])
 
     # Augmentacija samo na train setu
     train_ds.dataset.augment = True

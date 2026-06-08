@@ -1,66 +1,56 @@
+"""
+Predikcija teksta na novoj slici reda.
+Pokretanje:
+    python predict.py --img putanja/do/slike.jpg
+"""
+
+import torch
 import cv2
-from ultralytics import YOLO
+import argparse
 from pathlib import Path
 
-def main():
-    # --- PAMETNO ODREĐIVANJE PUTANJE (ZA TEBE I KOLEGICU) ---
-    TEKUCI_DIR = Path(__file__).resolve().parent
-    BASE_DIR = TEKUCI_DIR.parent if TEKUCI_DIR.name == "src" else TEKUCI_DIR
+from crnn_model import CRNN
+from dataset import NUM_CLASSES, preprocess_image, decode_prediction
 
-    # 1. Putanja do istreniranog modela u korenu projekta
-    model_path = BASE_DIR / "best.pt"
-    
-    # 2. Relativna putanja do test slike unutar 'originalne_slike'
-    img_path = BASE_DIR / "originalne_slike" / "struja4.jpg"
-    
-    # Putanja do foldera gde se čuvaju isečeni delovi (output)
-    output_dir = BASE_DIR / "output"
-    output_dir.mkdir(exist_ok=True)
-    # --------------------------------------------------------
+BASE_DIR = Path(__file__).resolve().parent.parent
 
-    # Provera da li model postoji
-    if not model_path.exists():
-        print(f"Model nije pronađen na lokaciji: {model_path}")
-        print("Pobrinite se da 'best.pt' bude u korenu projekta.")
-        return
+MODEL_PATH = str(BASE_DIR / "checkpoints" / "best_model.pt")
 
-    # Provera da li slika postoji
-    if not img_path.exists():
-        print(f"Slika nije pronađena na lokaciji: {img_path}")
-        print("Proveri da li se slika 'struja4.jpg' nalazi unutar foldera 'originalne_slike'.")
-        return
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    # Učitavanje YOLO modela
-    print(f"Učitavam model: {model_path.name}...")
-    model = YOLO(str(model_path))
-    
-    # Pokretanje YOLO predikcije
-    print(f"Analiziram sliku: {img_path.name}...")
+
+def load_model():
+    model = CRNN(num_classes=NUM_CLASSES).to(device)
+    model.load_state_dict(torch.load(MODEL_PATH, map_location=device))
+    model.eval()
+    return model
+
+
+def predict(model, img_path):
     img = cv2.imread(str(img_path))
-    results = model(img)
-    
-    # Prolazimo kroz sve detektovane kutije (bounding boxes)
-    brojac_isecaka = 0
-    for i, box in enumerate(results[0].boxes):
-        # Uzimamo koordinate (x1, y1, x2, y2) kao celobrojne vrednosti
-        x1, y1, x2, y2 = map(int, box.xyxy[0])
-        
-        # Uzimamo indeks i ime klase koju je YOLO prepoznao
-        cls_id = int(box.cls[0])
-        class_name = model.names[cls_id]
-        
-        # OpenCV sečenje (crop)
-        cropped_img = img[y1:y2, x1:x2]
-        
-        # Provera da li je isečak validan (da nema širinu ili visinu 0)
-        if cropped_img.size > 0:
-            crop_name = f"{class_name}_crop_{i}.jpg"
-            cv2.imwrite(str(output_dir / crop_name), cropped_img)
-            print(f"✓ Isečena klasa [{class_name}] → {crop_name}")
-            brojac_isecaka += 1
+    if img is None:
+        print(f"Ne mogu da učitam sliku: {img_path}")
+        return ""
 
-    print("\n" + "=" * 40)
-    print(f"Gotovo! Ukupno sačuvano isečaka u '{output_dir.name}': {brojac_isecaka}")
+    processed = preprocess_image(img)
+    if processed is None:
+        return ""
+
+    img_tensor = torch.tensor(processed).unsqueeze(0).unsqueeze(0).to(device)  # [1, 1, H, W]
+
+    with torch.no_grad():
+        logits = model(img_tensor)  # [T, 1, C]
+        log_probs = torch.nn.functional.log_softmax(logits, dim=2)
+        log_probs_np = log_probs.squeeze(1).cpu().numpy()  # [T, C]
+
+    return decode_prediction(log_probs_np)
+
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--img", required=True, help="Putanja do slike reda")
+    args = parser.parse_args()
+
+    model = load_model()
+    result = predict(model, args.img)
+    print(f"Prepoznati tekst: {result}")
