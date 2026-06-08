@@ -6,18 +6,20 @@ Arhitektura: ResNet CNN -> BiLSTM -> CTC
 import torch
 import torch.nn as nn
 
-
+# Rezidualni blok je osnovna jedinica ResNet arhitekture 
+# Problem dubokih mreza je sto gradijent nestaje dok se propagira nazad kroz slojeve - mreza prestaje da uci
+# Resenje je precica - ulaz se dodaje direktno na izlaz
 class ResidualBlock(nn.Module):
     """Osnovni rezidualni blok za CNN deo."""
     def __init__(self, in_channels, out_channels, stride=1):
         super().__init__()
-        self.conv1 = nn.Conv2d(in_channels, out_channels, 3, stride=stride, padding=1, bias=False)
+        self.conv1 = nn.Conv2d(in_channels, out_channels, 3, stride=stride, padding=1, bias=False) #prvi konvolucijski sloj
         self.bn1 = nn.BatchNorm2d(out_channels)
         self.relu = nn.ReLU(inplace=True)
-        self.conv2 = nn.Conv2d(out_channels, out_channels, 3, padding=1, bias=False)
+        self.conv2 = nn.Conv2d(out_channels, out_channels, 3, padding=1, bias=False) #drugi konvolucijski sloj
         self.bn2 = nn.BatchNorm2d(out_channels)
 
-        self.shortcut = nn.Sequential()
+        self.shortcut = nn.Sequential() #precica
         if stride != 1 or in_channels != out_channels:
             self.shortcut = nn.Sequential(
                 nn.Conv2d(in_channels, out_channels, 1, stride=stride, bias=False),
@@ -42,6 +44,12 @@ class CRNN(nn.Module):
         super().__init__()
 
         # ── CNN deo ──────────────────────────────────────────────────────────
+        """
+        CNN prima ulaz oblika [B, 1, 48, W], gde je B - batch size, 1 je jedan kanal(greyscale), 48 je visina, W je sirina
+        Svaki sloj smanjuje visinu poligonom dok ne dobijemo visinu 1 - sva informacija o visini je sabita u 512 feature mapa
+        Sirina se smanjuje mnogo manje jer koristimo asimetrican pooling(2, 1) koji smanjuje samo visinu
+        """
+        
         self.cnn = nn.Sequential(
             # Blok 1: 1 -> 32, H/2
             nn.Conv2d(1, 32, 3, padding=1, bias=False),
@@ -78,7 +86,7 @@ class CRNN(nn.Module):
             hidden_size=hidden_size,
             num_layers=num_lstm_layers,
             batch_first=False,   # [T, B, features]
-            bidirectional=True,
+            bidirectional=True, #cita i sa leva na desno i sa desna na levo
             dropout=0.3 if num_lstm_layers > 1 else 0.0,
         )
 
@@ -88,8 +96,9 @@ class CRNN(nn.Module):
     def forward(self, x):
         # x: [B, 1, H, W]
         features = self.cnn(x)               # [B, 512, 1, W']
-        features = features.squeeze(2)       # [B, 512, W']
-        features = features.permute(2, 0, 1) # [W', B, 512] = [T, B, input_size]
+        features = features.squeeze(2)       # [B, 512, W'] - izbacuje dimenziju visine
+        features = features.permute(2, 0, 1) # [W', B, 512] = [T, B, input_size] - W postaje T(vreme)
+                                             # svaka kolona slike postaje jedan vremenski korak
 
         lstm_out, _ = self.lstm(features)    # [T, B, hidden*2]
         logits = self.fc(lstm_out)           # [T, B, num_classes]
