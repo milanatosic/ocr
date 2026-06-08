@@ -13,3 +13,8 @@ wheels/
 *.pth
 *.pt
 *.h5
+
+*.jpg
+*.json
+*.jepg
+*.png
