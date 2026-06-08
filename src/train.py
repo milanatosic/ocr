@@ -142,8 +142,40 @@ def train():
 
     train_ds, val_ds, test_ds = analiziraj_i_podeli_po_korenu(CONFIG["csv_path"])
 
-    # Augmentacija samo na train setu
-    train_ds.dataset.augment = True
+    # Snimamo ih u privremene CSV fajlove kako bi tvoj OCRDataset mogao da ih učita
+    train_ds.to_csv("train_tmp.csv", index=False)
+    val_ds.to_csv("val_tmp.csv", index=False)
+    test_ds.to_csv("test_tmp.csv", index=False)
+
+    # ── 2. Kreiranje PyTorch Dataset objekata ─────────────────────────────────
+    train_ds = OCRDataset(
+        "train_tmp.csv",
+        CONFIG["base_dir"],
+        min_height=CONFIG["min_height"],
+        augment=True  # Augmentacija je UPALJENA samo za trening set
+    )
+    
+    val_ds = OCRDataset(
+        "val_tmp.csv",
+        CONFIG["base_dir"],
+        min_height=CONFIG["min_height"],
+        augment=False # Isključena za validaciju
+    )
+    
+    test_ds = OCRDataset(
+        "test_tmp.csv",
+        CONFIG["base_dir"],
+        min_height=CONFIG["min_height"],
+        augment=False # Isključena za test
+    )
+
+    # ── 3. DataLoader-i ───────────────────────────────────────────────────────
+    train_loader = DataLoader(train_ds, batch_size=CONFIG["batch_size"],
+                              shuffle=True, collate_fn=collate_fn, num_workers=2)
+    val_loader = DataLoader(val_ds, batch_size=CONFIG["batch_size"],
+                            shuffle=False, collate_fn=collate_fn, num_workers=2)
+    test_loader = DataLoader(test_ds, batch_size=CONFIG["batch_size"],
+                             shuffle=False, collate_fn=collate_fn, num_workers=2)
 
     print(f"Train: {len(train_ds)} | Val: {len(val_ds)} | Test: {len(test_ds)}")
 
