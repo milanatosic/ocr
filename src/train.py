@@ -20,10 +20,12 @@ from dataset import OCRDataset, collate_fn, NUM_CLASSES, decode_prediction
 from test_validation_train_split import analiziraj_i_podeli_po_korenu
 import sys
 
+# Zamenite trenutnu liniju za BASE_DIR i CONFIG sa ovim:
+import sys
 IN_COLAB = "google.colab" in sys.modules
 
 if IN_COLAB:
-    # Ako smo na Colabu, znamo tačnu putanju do projekta
+    # Ako smo na Colabu, znamo tačnu i fiksnu putanju do projekta
     BASE_DIR = Path("/content/is_projekat")
 else:
     # Ako smo lokalno, uzimamo folder iznad src-a
