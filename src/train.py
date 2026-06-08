@@ -272,7 +272,7 @@ def train():
             for i in range(min(5, len(label_strs))):
                 pred = decode_prediction(log_probs_np[i])
                 print(f"  Tačno:    {label_strs[i]}")
-                print(f"  Predviđ:  {pred}")
+                print(f"  Predviđeno:  {pred}")
                 print()
             break
 
