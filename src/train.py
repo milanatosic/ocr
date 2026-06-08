@@ -12,12 +12,14 @@ import numpy as np
 import json
 from pathlib import Path
 from tqdm import tqdm
+import zipfile
+import os
 
-from crnn_model import CRNN
+from model import CRNN
 from dataset import OCRDataset, collate_fn, NUM_CLASSES, decode_prediction
 from test_validation_train_split import analiziraj_i_podeli_po_korenu
 
-BASE_DIR = Path(__file__).resolve().parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 # ── Konfiguracija ─────────────────────────────────────────────────────────────
 CONFIG = {
@@ -49,6 +51,33 @@ Path(CONFIG["output_dir"]).mkdir(exist_ok=True, parents=True)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Uređaj: {device}")
+
+def colab_save_zip(label="crnn"):
+    """Zipuje checkpoints folder i preuzima ga na lokalni računar (samo na Colabu)."""
+    # Proveravamo da li smo na Colabu (definišemo IN_COLAB preko sys.modules)
+    import sys
+    IN_COLAB = "google.colab" in sys.modules
+    
+    if not IN_COLAB:
+        return
+        
+    try:
+        from google.colab import files as colab_files
+        output_dir = CONFIG["output_dir"]
+        zip_path = f"{label}_checkpoints.zip"
+        
+        # Spakuj ceo checkpoints folder u zip
+        with zipfile.ZipFile(zip_path, "w") as z:
+            for root, _, files in os.walk(output_dir):
+                for file in files:
+                    full_path = os.path.join(root, file)
+                    # Čuvamo fajl u zipu sa relativnom putanjom
+                    z.write(full_path, os.path.relpath(full_path, output_dir))
+                    
+        print(f"\nPakovanje završeno. Pokrećem preuzimanje fajla {zip_path}...")
+        colab_files.download(zip_path)
+    except Exception as e:
+        print(f"Greška prilikom automatskog preuzimanja: {e}")
 
 
 def cer(pred, target):
@@ -229,6 +258,8 @@ def train():
         json.dump(history, f, indent=2)
 
     print("Trening završen!")
+
+    colab_save_zip("ocr_model")
 
 
 if __name__ == "__main__":
