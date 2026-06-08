@@ -179,13 +179,6 @@ def train():
 
     print(f"Train: {len(train_ds)} | Val: {len(val_ds)} | Test: {len(test_ds)}")
 
-    train_loader = DataLoader(train_ds, batch_size=CONFIG["batch_size"],
-                              shuffle=True, collate_fn=collate_fn, num_workers=2)
-    val_loader = DataLoader(val_ds, batch_size=CONFIG["batch_size"],
-                            shuffle=False, collate_fn=collate_fn, num_workers=2)
-    test_loader = DataLoader(test_ds, batch_size=CONFIG["batch_size"],
-                             shuffle=False, collate_fn=collate_fn, num_workers=2)
-
     # ── Model ─────────────────────────────────────────────────────────────────
     model = CRNN(
         num_classes=NUM_CLASSES,
