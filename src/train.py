@@ -45,7 +45,7 @@ CONFIG = {
 
     "batch_size":     16,
     "num_epochs":     150,
-    "learning_rate":  1e-3,
+    "learning_rate":  5e-4,
     "weight_decay":   1e-4,
 
     "train_ratio":    0.8,
@@ -53,7 +53,7 @@ CONFIG = {
     # ostatak je test (0.1)
 
     "min_height":     15,   # filtriraj slike ispod ove visine
-    "patience":       8,    # early stopping
+    "patience":       15,    # early stopping
     "save_every":     5,    # čuvaj checkpoint svakih N epoha
 }
 
@@ -113,16 +113,17 @@ def evaluate(model, loader, ctc_loss):
     n = 0
 
     with torch.no_grad():
-        for imgs, labels, label_lengths, label_strs in loader:
+        # IZMENA: Dodat "input_lengths" na kraj
+        for imgs, labels, label_lengths, label_strs, input_lengths in loader:
             imgs = imgs.to(device)
             labels = labels.to(device)
             label_lengths = label_lengths.to(device)
+            input_lengths = input_lengths.to(device) # Dodato
 
             logits = model(imgs)  # [T, B, C]
-            T, B, C = logits.shape
             log_probs = torch.nn.functional.log_softmax(logits, dim=2)
-            input_lengths = torch.full((B,), T, dtype=torch.long, device=device)
 
+            # Koristimo stvarne input_lengths umesto fiksnih T
             loss = ctc_loss(log_probs, labels, input_lengths, label_lengths)
             total_loss += loss.item()
 
@@ -192,12 +193,13 @@ def train():
     optimizer = optim.Adam(model.parameters(),
                            lr=CONFIG["learning_rate"],
                            weight_decay=CONFIG["weight_decay"])
+    # ── Izmena: Scheduler sada prati 'min' mod, ali za CER ────────────────────
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(
-        optimizer, mode='min', factor=0.5, patience=3
+        optimizer, mode='min', factor=0.5, patience=4 # smanji LR ako CER stagnira 4 epohe
     )
 
-    # ── Trening petlja ────────────────────────────────────────────────────────
-    best_val_loss = float('inf')
+# ── Trening petlja ────────────────────────────────────────────────────────
+    best_val_cer = float('inf') # PRELAZIMO NA CER!
     patience_counter = 0
     history = {"train_loss": [], "val_loss": [], "val_cer": []}
 
@@ -205,17 +207,19 @@ def train():
         model.train()
         train_loss = 0
 
-        for imgs, labels, label_lengths, _ in tqdm(train_loader, desc=f"Epoha {epoch}"):
+       # IZMENA: Dodat "input_lengths" na kraj raspakivanja
+        for imgs, labels, label_lengths, _, input_lengths in tqdm(train_loader, desc=f"Epoha {epoch}"):
             imgs = imgs.to(device)
             labels = labels.to(device)
             label_lengths = label_lengths.to(device)
+            input_lengths = input_lengths.to(device) # Šaljemo na GPU/CPU
 
             optimizer.zero_grad()
             logits = model(imgs)  # [T, B, C]
-            T, B, C = logits.shape
             log_probs = torch.nn.functional.log_softmax(logits, dim=2)
-            input_lengths = torch.full((B,), T, dtype=torch.long, device=device)
-
+            
+            # OBRISANO: input_lengths = torch.full(...) 
+            # SADA KORISTIMO PRAVI VEKTOR:
             loss = ctc_loss(log_probs, labels, input_lengths, label_lengths)
 
             if not torch.isnan(loss) and not torch.isinf(loss):
@@ -226,7 +230,9 @@ def train():
 
         train_loss /= len(train_loader)
         val_loss, val_cer = evaluate(model, val_loader, ctc_loss)
-        scheduler.step(val_loss)
+        
+        # ── Izmena: Scheduler sada prati VAL CER ──────────────────────────────
+        scheduler.step(val_cer)
 
         history["train_loss"].append(train_loss)
         history["val_loss"].append(val_loss)
@@ -234,24 +240,45 @@ def train():
 
         print(f"Epoha {epoch:3d} | Train loss: {train_loss:.4f} | "
               f"Val loss: {val_loss:.4f} | Val CER: {val_cer:.4f}")
+        
+        # ── NOVI KOD: Vizuelno praćenje napretka kroz epohe ───────────────────
+        print(f"\n--- [Validacija] Primeri predikcija za epohu {epoch} ---")
+        model.eval()
+        with torch.no_grad():
+            # Uzimamo samo prvi batch iz validacionog loadera za prikaz
+            for val_imgs, _, _, val_label_strs, _ in val_loader:
+                val_imgs = val_imgs.to(device)
+                val_logits = model(val_imgs)  # [T, B, C]
+                val_log_probs = torch.nn.functional.log_softmax(val_logits, dim=2)
+                val_log_probs_np = val_log_probs.permute(1, 0, 2).cpu().numpy()
+                
+                # Ispisujemo prvih 3 do 5 primera iz tog batch-a
+                za_prikaz = min(3, len(val_label_strs))
+                for i in range(za_prikaz):
+                    pred_str = decode_prediction(val_log_probs_np[i])
+                    print(f"  Tačno:      {val_label_strs[i]}")
+                    print(f"  Predviđeno: {pred_str}")
+                    print("-" * 40)
+                break # Uzimamo samo prvi batch i prekidamo petlju da ne ispisujemo sve
+        print("=" * 60 + "\n")
 
-        # Sačuvaj checkpoint
+        # Sačuvaj checkpoint svakih N epoha
         if epoch % CONFIG["save_every"] == 0:
             ckpt_path = Path(CONFIG["output_dir"]) / f"checkpoint_epoch{epoch}.pt"
             torch.save({"epoch": epoch, "model": model.state_dict(),
                         "optimizer": optimizer.state_dict()}, ckpt_path)
 
-        # Sačuvaj best model
-        if val_loss < best_val_loss:
-            best_val_loss = val_loss
+        # ── Izmena: Čuvanje najboljeg modela i Early Stopping na osnovu CER-a ──
+        if val_cer < best_val_cer:
+            best_val_cer = val_cer
             patience_counter = 0
             torch.save(model.state_dict(),
                        Path(CONFIG["output_dir"]) / "best_model.pt")
-            print(f"  → Novi best model sačuvan (val_loss: {best_val_loss:.4f})")
+            print(f"  → Novi best model sačuvan (val_cer: {best_val_cer:.4f})")
         else:
             patience_counter += 1
             if patience_counter >= CONFIG["patience"]:
-                print(f"Early stopping na epohi {epoch}.")
+                print(f"Early stopping na epohi {epoch} (Pratio se Val CER).")
                 break
 
     # ── Test evaluacija ───────────────────────────────────────────────────────
@@ -264,7 +291,8 @@ def train():
     print("\n── Primeri predikcija ───────────────────────────────────────")
     model.eval()
     with torch.no_grad():
-        for imgs, labels, label_lengths, label_strs in test_loader:
+        # IZMENA: Dodat _ na kraj raspakivanja
+        for imgs, labels, label_lengths, label_strs, _ in test_loader:
             imgs = imgs.to(device)
             logits = model(imgs)
             log_probs = torch.nn.functional.log_softmax(logits, dim=2)

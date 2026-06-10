@@ -17,8 +17,8 @@ CHARS = (
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ"  # latinica velika
     "abcdefghijklmnopqrstuvwxyz"  # latinica mala
     "ČčĆćŠšŽžĐđ"                 # srpska latinica
-    "АБВГДЂЕЖЗИЈКЛЉМНЊОПРСТЋУФХЦЧЏШ"  # ćirilica velika
-    "абвгдђежзијклљмњопрстћуфхцчџш"    # ćirilica mala
+    "БВГДЂЖЗИЛЉНЊПРСЋУФХЦЧЏШ"  # ćirilica velika
+    "бвгдђжзиклљмњпрстћуфхцчџш"    # ćirilica mala
 )
 BLANK = 0  # CTC blank token, ne znaci razmak, vec nema karaktera ovde
 CHAR_TO_IDX = {c: i + 1 for i, c in enumerate(CHARS)}  # 0 je blank
@@ -27,6 +27,7 @@ NUM_CLASSES = len(CHARS) + 1  # +1 za blank
 
 IMG_HEIGHT = 48
 IMG_WIDTH = 768  # max širina, manje slike se padduju
+CNN_REDUCTION_FACTOR = 4  # Većina CRNN modela smanjuje širinu 4 puta kroz Pooling slojeve
 
 
 def encode_label(text):
@@ -67,14 +68,7 @@ def decode_prediction(logits):
 def preprocess_image(img_bgr, target_height=IMG_HEIGHT, max_width=IMG_WIDTH):
     """
     Preprocess slike za CRNN:
-    1. Grayscale
-    2. Resize na target_height, čuvajući proporcije
-    3. Pad ili crop na max_width
-    4. Normalizacija [0, 1]
-    Sve slike moraju biti iste velicine za batch procesiranje. 
-    Visina je uvek 48px. Sirina je proporcionalna originalu ali maksimalno 768px - 
-    krace slike se dopunjuju belim pikselima sa desna(padding). Model uci da ignorise padding jer
-    tamo nema teksta
+    Vraća prerađenu sliku I novu validnu širinu (pre paddinga).
     """
     # Grayscale
     if len(img_bgr.shape) == 3:
@@ -84,7 +78,7 @@ def preprocess_image(img_bgr, target_height=IMG_HEIGHT, max_width=IMG_WIDTH):
 
     h, w = gray.shape
     if h == 0 or w == 0:
-        return None
+        return None, 0
 
     # Resize na target_height
     new_w = int(w * target_height / h)
@@ -100,9 +94,9 @@ def preprocess_image(img_bgr, target_height=IMG_HEIGHT, max_width=IMG_WIDTH):
         result = resized
 
     # Normalizacija
-    result = result.astype(np.float32) / 255.0 # pikseli slike su celi brojevi od 0-255
+    result = result.astype(np.float32) / 255.0
 
-    return result
+    return result, new_w  # ◄ IZMENA: Vraćamo i novu širinu teksta bez paddinga
 
 
 class OCRDataset(Dataset):
@@ -148,40 +142,43 @@ class OCRDataset(Dataset):
 
         img = cv2.imread(str(img_path))
         if img is None:
-            # Vrati placeholder ako slika ne može da se učita
             img = np.zeros((IMG_HEIGHT, IMG_WIDTH), dtype=np.float32)
-            img = torch.tensor(img).unsqueeze(0)
-            return img, torch.tensor([1], dtype=torch.long), label_str
+            img_tensor = torch.tensor(img).unsqueeze(0)
+            # Vraćamo: slika, labele, string, i broj vremenskih koraka (za celu širinu kao fallback)
+            return img_tensor, torch.tensor([1], dtype=torch.long), label_str, (IMG_WIDTH // CNN_REDUCTION_FACTOR)
 
         if self.augment:
             img = self._augment(img)
 
-        processed = preprocess_image(img) # resize + pad + normalizacija
+        # ◄ IZMENA: Prihvatamo prerađenu sliku i njenu stvarnu širinu
+        processed, valid_width = preprocess_image(img) 
         if processed is None:
             processed = np.zeros((IMG_HEIGHT, IMG_WIDTH), dtype=np.float32)
+            valid_width = IMG_WIDTH
 
-        img_tensor = torch.tensor(processed).unsqueeze(0)  # dodaj kanal dimenziju [1, H, W]
-        label_encoded = encode_label(label_str) # string -> indeksi
+        img_tensor = torch.tensor(processed).unsqueeze(0)  # [1, H, W]
+        label_encoded = encode_label(label_str)
 
         if len(label_encoded) == 0:
             label_encoded = [1]  # fallback
 
-        return img_tensor, torch.tensor(label_encoded, dtype=torch.long), label_str
+        # Računamo koliko vremenskih koraka zauzima tekst nakon što prođe kroz CNN slojeve
+        # max(1, ...) osigurava da nemamo nula koraka za ekstremno kratke slike
+        valid_steps = max(1, valid_width // CNN_REDUCTION_FACTOR)
+
+        return img_tensor, torch.tensor(label_encoded, dtype=torch.long), label_str, valid_steps
 
     def _augment(self, img):
         """Jednostavna augmentacija za trening."""
-        # Slučajni brightness/contrast
         if np.random.random() < 0.5:
-            alpha = np.random.uniform(0.7, 1.3)  # kontrast
-            beta = np.random.randint(-20, 20)      # brightness
+            alpha = np.random.uniform(0.7, 1.3)
+            beta = np.random.randint(-20, 20)
             img = np.clip(alpha * img + beta, 0, 255).astype(np.uint8)
 
-        # Slučajni Gaussian blur
         if np.random.random() < 0.3:
             ksize = np.random.choice([3, 5])
             img = cv2.GaussianBlur(img, (ksize, 1), 0)
 
-        # Slučajni šum
         if np.random.random() < 0.2:
             noise = np.random.normal(0, 5, img.shape).astype(np.float32)
             img = np.clip(img.astype(np.float32) + noise, 0, 255).astype(np.uint8)
@@ -192,17 +189,18 @@ class OCRDataset(Dataset):
 def collate_fn(batch):
     """
     Custom collate za CTC loss:
-    - Slike su već iste veličine (paddovane)
-    - Labele su različitih dužina -> čuvamo kao 1D tensor + lengths
-    CTC loss ne prima listu labela razlicitih duzina nego jedan veliki 1D tensor svih labela
-    zalepljenih jedna za drugu plus listu duzina da zna gde koja pocinje i zavrsava.
-    Npr. labele ["AB", "CDE"] -> [2, 3, 4, 5, 6] + duzine [2, 3]
+    Sada pakuje i dinamičke dužine ulaza (input_lengths) kako bi CTC ignorisao padding.
     """
-    imgs, labels, label_strs = zip(*batch)
+    # ◄ IZMENA: Otpakujemo i valid_steps iz batch-a
+    imgs, labels, label_strs, valid_steps = zip(*batch)
 
     imgs = torch.stack(imgs, 0)  # [B, 1, H, W]
 
     label_lengths = torch.tensor([len(l) for l in labels], dtype=torch.long)
-    labels_concat = torch.cat(labels)  # CTC očekuje 1D concatenated
+    labels_concat = torch.cat(labels)  # [Ukupan_broj_karaktera_u_batchu]
+    
+    # ◄ IZMENA: Pakujemo valid_steps svih slika u jedan tenzor
+    input_lengths = torch.tensor(valid_steps, dtype=torch.long)
 
-    return imgs, labels_concat, label_lengths, label_strs
+    # ◄ IZMENA: Sada vraćamo i input_lengths nazad u DataLoader!
+    return imgs, labels_concat, label_lengths, label_strs, input_lengths
