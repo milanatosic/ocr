@@ -44,7 +44,7 @@ CONFIG = {
     "num_lstm_layers": 2,
 
     "batch_size":     16,
-    "num_epochs":     50,
+    "num_epochs":     150,
     "learning_rate":  1e-3,
     "weight_decay":   1e-4,
 
@@ -281,8 +281,6 @@ def train():
         json.dump(history, f, indent=2)
 
     print("Trening završen!")
-
-    colab_save_zip("ocr_model")
 
 
 if __name__ == "__main__":
