@@ -186,7 +186,6 @@ def train():
 
             loss = ctc_loss(log_probs, labels, input_lengths, label_lengths)
 
-            # Ako loss uprkos svemu vrati grešku, preskoči eksploziju težina
             if torch.isnan(loss) or torch.isinf(loss):
                 continue
 
