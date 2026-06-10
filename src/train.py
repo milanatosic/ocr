@@ -113,23 +113,25 @@ def evaluate(model, loader, ctc_loss):
     n = 0
 
     with torch.no_grad():
-        # IZMENA: Dodat "input_lengths" na kraj
+        # Prihvatamo i input_lengths na kraju (ukupno 5 elemenata)
         for imgs, labels, label_lengths, label_strs, input_lengths in loader:
             imgs = imgs.to(device)
             labels = labels.to(device)
             label_lengths = label_lengths.to(device)
-            input_lengths = input_lengths.to(device) # Dodato
+            input_lengths = input_lengths.to(device)
 
             logits = model(imgs)  # [T, B, C]
+            T, B, C = logits.shape # ◄ OVDE DEFINIŠEMO B (Batch size)!
+            
             log_probs = torch.nn.functional.log_softmax(logits, dim=2)
 
             # Koristimo stvarne input_lengths umesto fiksnih T
             loss = ctc_loss(log_probs, labels, input_lengths, label_lengths)
             total_loss += loss.item()
 
-            # CER
+            # Računanje CER-a za svaku sliku u batch-u
             log_probs_np = log_probs.permute(1, 0, 2).cpu().numpy()
-            for i in range(B):
+            for i in range(B): # ◄ Sada je 'B' uspešno definisano iz logits.shape
                 pred = decode_prediction(log_probs_np[i])
                 total_cer += cer(pred, label_strs[i])
                 n += 1
