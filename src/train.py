@@ -158,7 +158,7 @@ def train():
     optimizer = optim.AdamW(model.parameters(), lr=CONFIG["learning_rate"],
                             weight_decay=CONFIG["weight_decay"])
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min',
-                                                     factor=0.5, patience=3, verbose=True)
+                                                 factor=0.5, patience=3)
     scaler = GradScaler(enabled=CONFIG["use_amp"])
 
     best_val_loss = float('inf')
