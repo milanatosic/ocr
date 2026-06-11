@@ -1,13 +1,15 @@
 """
-CRNN + CTC model za OCR srpskih računa
+CRNN + CTC model za OCR srpskih računa.
 Arhitektura: ResNet CNN -> BiLSTM -> CTC
 """
 
 import torch
 import torch.nn as nn
 
+
 class ResidualBlock(nn.Module):
     """Osnovni rezidualni blok za CNN deo."""
+
     def __init__(self, in_channels, out_channels, stride=1):
         super().__init__()
         self.conv1 = nn.Conv2d(in_channels, out_channels, 3, stride=stride, padding=1, bias=False)
@@ -20,7 +22,7 @@ class ResidualBlock(nn.Module):
         if stride != 1 or in_channels != out_channels:
             self.shortcut = nn.Sequential(
                 nn.Conv2d(in_channels, out_channels, 1, stride=stride, bias=False),
-                nn.BatchNorm2d(out_channels)
+                nn.BatchNorm2d(out_channels),
             )
 
     def forward(self, x):
@@ -40,27 +42,22 @@ class CRNN(nn.Module):
             nn.BatchNorm2d(32),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=(2, 2), stride=(2, 2)),
-
             # Blok 2: 32 -> 64 | H: 24 -> 12
             ResidualBlock(32, 64),
             nn.MaxPool2d(kernel_size=(2, 1), stride=(2, 1)),
-
             # Blok 3: 64 -> 128 | H: 12 -> 6
             ResidualBlock(64, 128),
             nn.MaxPool2d(kernel_size=(2, 1), stride=(2, 1)),
-
             # Blok 4: 128 -> 256 | H: 6 -> 3
             ResidualBlock(128, 256),
             nn.MaxPool2d(kernel_size=(2, 1), stride=(2, 1)),
-
             # Blok 5: 256 -> 512 | H: 3 -> 1
             ResidualBlock(256, 512),
             nn.MaxPool2d(kernel_size=(3, 1), stride=(3, 1)),
-
-            nn.Dropout2d(0.3),  # bilo 0.2
+            nn.Dropout2d(0.3),
         )
 
-        self.dropout = nn.Dropout(p=0.4)  # novo — između CNN i LSTM
+        self.dropout = nn.Dropout(p=0.4)
 
         self.lstm = nn.LSTM(
             input_size=512,
@@ -68,19 +65,16 @@ class CRNN(nn.Module):
             num_layers=num_lstm_layers,
             batch_first=False,
             bidirectional=True,
-            dropout=0.0,  # 0 jer je num_lstm_layers=1 (dropout ne radi sa 1 slojem)
+            dropout=0.0,  # 0 jer je num_lstm_layers=1
         )
 
         self.fc = nn.Linear(hidden_size * 2, num_classes)
 
     def forward(self, x):
-        features = self.cnn(x)               # [B, 512, 1, W/2]
-        features = features.squeeze(2)       # [B, 512, W/2]
-        features = features.permute(2, 0, 1) # [T, B, 512]
-
-        features = self.dropout(features)    # novo — regularizacija pre LSTM-a
-
-        lstm_out, _ = self.lstm(features)    # [T, B, hidden_size * 2]
-        logits = self.fc(lstm_out)           # [T, B, num_classes]
-
+        features = self.cnn(x)                # [B, 512, 1, W']
+        features = features.squeeze(2)        # [B, 512, W']
+        features = features.permute(2, 0, 1)  # [T, B, 512]
+        features = self.dropout(features)
+        lstm_out, _ = self.lstm(features)     # [T, B, hidden*2]
+        logits = self.fc(lstm_out)            # [T, B, num_classes]
         return logits
