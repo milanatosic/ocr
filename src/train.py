@@ -1,8 +1,3 @@
-"""
-Trening skripta za CRNN OCR model.
-Pokretanje: python train.py
-"""
-
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -42,13 +37,14 @@ CONFIG = {
     "num_lstm_layers": 1,
 
     "batch_size":      16,
-    "num_epochs":      40,
+    "num_epochs":      150,
     "learning_rate":   3e-4,
     "weight_decay":    1e-3,
 
     "min_height":      15,
     "patience":        6,
     "save_every":      5,
+    "num_preview":     5,   # ← broj primera za ispis nakon svake epohe
 }
 
 Path(CONFIG["output_dir"]).mkdir(exist_ok=True, parents=True)
@@ -126,6 +122,36 @@ def evaluate(model, loader, ctc_loss):
                 n += 1
 
     return total_loss / len(loader), total_cer / max(n, 1)
+
+
+def preview_predictions(model, loader, num_samples=5):
+    """
+    Ispisuje num_samples primera: tačan tekst vs. predviđeni tekst.
+    Koristi se nakon svake epohe za vizuelni pregled napretka.
+    """
+    model.eval()
+    printed = 0
+
+    with torch.no_grad():
+        for imgs, _, _, _, label_strs in loader:
+            imgs = imgs.to(device)
+            logits = model(imgs)
+            log_probs = torch.nn.functional.log_softmax(logits, dim=2)
+            log_probs_np = log_probs.permute(1, 0, 2).cpu().numpy()
+
+            for i in range(len(label_strs)):
+                if printed >= num_samples:
+                    return
+                pred = decode_prediction(log_probs_np[i])
+                tačno = label_strs[i]
+                predviđeno = pred
+                # Oboji zeleno ako se poklapa, crveno ako ne
+                pogodak = "✓" if tačno == predviđeno else "✗"
+                print(f"  [{pogodak}] Tačan tekst : {tačno}")
+                print(f"      Predviđeno  : {predviđeno}")
+                print(f"      CER         : {cer(predviđeno, tačno):.4f}")
+                print(f"      {'-' * 40}")
+                printed += 1
 
 
 def train():
@@ -206,6 +232,11 @@ def train():
 
         print(f"Epoha {epoch:3d} | Train loss: {train_loss:.4f} | Val loss: {val_loss:.4f} | Val CER: {val_cer:.4f}")
 
+        # ── Vizuelna provera predikcija nakon svake epohe ─────────────────────
+        print(f"\n── Primeri predikcija (epoha {epoch}) ────────────────────────")
+        preview_predictions(model, val_loader, num_samples=CONFIG["num_preview"])
+        print()
+
         # Periodično čuvanje checkpointa
         if epoch % CONFIG["save_every"] == 0:
             ckpt_path = Path(CONFIG["output_dir"]) / f"checkpoint_epoch{epoch}.pt"
@@ -231,24 +262,12 @@ def train():
     checkpoint = torch.load(Path(CONFIG["output_dir"]) / "best_model.pt")
     model.load_state_dict(checkpoint["model"])
 
-    test_loss, test_cer = evaluate(model, test_loader, ctc_loss)
-    print(f"Finalni rezultati -> Test loss: {test_loss:.4f} | Test CER: {test_cer:.4f}")
+    test_loss, test_cer_score = evaluate(model, test_loader, ctc_loss)
+    print(f"Finalni rezultati -> Test loss: {test_loss:.4f} | Test CER: {test_cer_score:.4f}")
 
-    # Vizuelna provera predikcija
-    print("\n── Nasumični primeri predikcija (vizuelna provera) ────────────────")
-    model.eval()
-    with torch.no_grad():
-        for imgs, _, _, _, label_strs in test_loader:
-            imgs = imgs.to(device)
-            logits = model(imgs)
-            log_probs = torch.nn.functional.log_softmax(logits, dim=2)
-            log_probs_np = log_probs.permute(1, 0, 2).cpu().numpy()
-            for i in range(min(5, len(label_strs))):
-                pred = decode_prediction(log_probs_np[i])
-                print(f"  Tačan tekst: {label_strs[i]}")
-                print(f"  Predviđeno:  {pred}")
-                print("-" * 40)
-            break
+    # Vizuelna provera predikcija na test setu
+    print("\n── Nasumični primeri predikcija na TEST setu ─────────────────────")
+    preview_predictions(model, test_loader, num_samples=10)
 
     # Snimanje istorije treninga
     with open(Path(CONFIG["output_dir"]) / "history.json", "w") as f:
