@@ -1,75 +1,88 @@
+"""
+Podela dataseta na train/val/test PO RAČUNU (racun_id).
+"""
+
 import pandas as pd
+import random
 from pathlib import Path
-import re
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+# ── Automatska detekcija root foldera ─────────────────────────────────────────
+# Ova skripta je u src/, dakle root je folder iznad
+ROOT = Path(__file__).resolve().parent.parent
 
-CONFIG = str(BASE_DIR / "dataset.csv")
+CSV_PATH = ROOT / "dataset.csv"
+OUTPUT_DIR = ROOT / "splits"
+SEED = 42
 
-def analiziraj_i_podeli_po_korenu(csv_path):
-    # 1. Učitavanje CSV-a
-    df = pd.read_csv(csv_path)
-    
-    # Funkcija koja uklanja sve cifre sa kraja stringa
-    def izvuci_koren(tekst):
-        # r'\d+$' pronalazi sve spojeve brojeva na samom kraju stringa i brise ih
-        return re.sub(r'\d+$', '', str(tekst))
-    
-    # Kreiramo novu privremenu kolonu koja nam služi kao stvarni ID grupe
-    df['grupa_racuna'] = df['racun_id'].apply(izvuci_koren)
-    
-    # 2. Grupisanje po novoj koloni i brojanje slika
-    statistika = df.groupby('grupa_racuna').size().reset_index(name='broj_slika')
-    statistika = statistika.sort_values(by='broj_slika', ascending=False).reset_index(drop=True)
-    
-    print("\n" + "="*50)
-    print(" PREGLED GRUPA RAČUNA (BEZ BROJEVA NA KRAJU)")
-    print("="*50)
-    for idx, row in statistika.iterrows():
-        print(f"[{idx+1}] Grupa: {row['grupa_racuna']:<20} | Ukupno slika: {row['broj_slika']}")
-    print("="*50)
-    print(f"Ukupno jedinstvenih grupa: {len(statistika)}")
-    print(f"Ukupno slika u celom datasetu: {len(df)}\n")
-    
-    # ── OVDE RUČNO UPISUJEŠ IMENA GRUPA (BEZ BROJEVA) KAKO ŽELIŠ DA IH PODELIŠ ──
-    # Pogledaj ispis iznad i rasporedi korenove reči (npr. 'struja', 'grejanje')
-    
-    TRAIN_GRUPE = [
-        'struja', 'mts', 'uplatnica'
-        # ... dopuni listu grupama koje želiš u treningu
-    ]
-    
-    VAL_GRUPE = [
-        'jotel', 'grejanje',
-        # ... dopuni listu za validaciju (npr. ovde staviš neku ćiriličnu grupu)
-    ]
-    
-    TEST_GRUPE = [
-        'odrzavanje_zgrade', 'smece'
-        # ... dopuni listu za test
-    ]
-    
-    # ── 3. Automatsko kreiranje podskupova na osnovu tvoje podele ───────────────
-    df_train = df[df['grupa_racuna'].isin(TRAIN_GRUPE)].reset_index(drop=True)
-    df_val = df[df['grupa_racuna'].isin(VAL_GRUPE)].reset_index(drop=True)
-    df_test = df[df['grupa_racuna'].isin(TEST_GRUPE)].reset_index(drop=True)
-    
-    # Ispis finalne statistike
-    print(" KONAČNA RASPODELA SLIKA:")
-    print(f"  - TRAIN skup: {len(df_train)} slika ({len(df_train)/len(df)*100:.1f}%)")
-    print(f"  - VAL skup:   {len(df_val)} slika ({len(df_val)/len(df)*100:.1f}%)")
-    print(f"  - TEST skup:  {len(df_test)} slika ({len(df_test)/len(df)*100:.1f}%)")
-    
-    # Provera da li je nešto izostavljeno
-    zaboravljeni = set(df['grupa_racuna'].unique()) - set(TRAIN_GRUPE + VAL_GRUPE + TEST_GRUPE)
-    if zaboravljeni:
-        print(f"\nNeraspodeljeni racuni: {zaboravljeni}")
-        
-    # Brišemo privremenu kolonu pre vraćanja da ti ne kvari originalnu strukturu CSV-a
-    df_train = df_train.drop(columns=['grupa_racuna'])
-    df_val = df_val.drop(columns=['grupa_racuna'])
-    df_test = df_test.drop(columns=['grupa_racuna'])
-    
-    return df_train, df_val, df_test
+TRAIN_RATIO = 0.80
+VAL_RATIO = 0.10
 
-df_train, df_val, df_test = analiziraj_i_podeli_po_korenu(CONFIG)
+random.seed(SEED)
+
+
+def get_group(racun_id):
+    """Izvuče naziv grupe iz racun_id (npr. 'grejanje10' -> 'grejanje')."""
+    return ''.join(c for c in racun_id if not c.isdigit())
+
+
+def main():
+    print(f"Root projekta: {ROOT}")
+    print(f"CSV: {CSV_PATH}")
+    print(f"Output: {OUTPUT_DIR}\n")
+
+    df = pd.read_csv(CSV_PATH)
+    print(f"Ukupno cropova: {len(df)}")
+    print(f"Jedinstvenih računa: {df['racun_id'].nunique()}")
+
+    df['grupa'] = df['racun_id'].apply(get_group)
+
+    print("\nBroj računa po grupi:")
+    for grupa, group_df in df.groupby('grupa'):
+        n_racuna = group_df['racun_id'].nunique()
+        n_cropova = len(group_df)
+        print(f"  {grupa:25s}: {n_racuna:3d} računa, {n_cropova:4d} cropova")
+
+    train_ids, val_ids, test_ids = [], [], []
+
+    print("\n═══ PODELA PO RAČUNIMA (unutar svake grupe) ═══")
+    for grupa, group_df in df.groupby('grupa'):
+        racuni = list(group_df['racun_id'].unique())
+        random.shuffle(racuni)
+
+        n = len(racuni)
+        n_train = max(1, int(TRAIN_RATIO * n))
+        n_val = max(1, int(VAL_RATIO * n)) if n >= 10 else 0
+        n_test = n - n_train - n_val
+
+        if n_test < 1 and n >= 3:
+            n_train -= 1
+            n_test = 1
+
+        train_ids += racuni[:n_train]
+        val_ids   += racuni[n_train:n_train + n_val]
+        test_ids  += racuni[n_train + n_val:]
+
+        print(f"  {grupa:25s}: {n_train:3d} train | {n_val:2d} val | {n_test:2d} test")
+
+    train_df = df[df['racun_id'].isin(train_ids)].drop(columns=['grupa'])
+    val_df   = df[df['racun_id'].isin(val_ids)].drop(columns=['grupa'])
+    test_df  = df[df['racun_id'].isin(test_ids)].drop(columns=['grupa'])
+
+    assert not (set(train_ids) & set(val_ids))
+    assert not (set(train_ids) & set(test_ids))
+    assert not (set(val_ids) & set(test_ids))
+
+    OUTPUT_DIR.mkdir(exist_ok=True, parents=True)
+    train_df.to_csv(OUTPUT_DIR / "train.csv", index=False)
+    val_df.to_csv(OUTPUT_DIR / "val.csv", index=False)
+    test_df.to_csv(OUTPUT_DIR / "test.csv", index=False)
+
+    print(f"\n═══ KONAČNA RASPODELA (cropovi) ═══")
+    print(f"  TRAIN: {len(train_df):5d} ({100*len(train_df)/len(df):.1f}%)")
+    print(f"  VAL:   {len(val_df):5d} ({100*len(val_df)/len(df):.1f}%)")
+    print(f"  TEST:  {len(test_df):5d} ({100*len(test_df)/len(df):.1f}%)")
+    print(f"\n✅ Sačuvano u {OUTPUT_DIR}/")
+
+
+if __name__ == "__main__":
+    main()
