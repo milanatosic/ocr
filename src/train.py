@@ -1,21 +1,17 @@
 """
 Trening CRNN OCR modela.
 Putanje su portabilne (automatski detektuje root).
-
-Pokretanje:
-    python src/train.py
 """
 
 import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
-from torch.cuda.amp import autocast, GradScaler
+from torch.amp import autocast, GradScaler
 import numpy as np
 import json
 import time
 import shutil
-import os
 from pathlib import Path
 from tqdm import tqdm
 import sys
@@ -29,35 +25,30 @@ from dataset import OCRDataset, collate_fn, NUM_CLASSES, decode_prediction
 
 # ── Konfiguracija ─────────────────────────────────────────────────────────────
 CONFIG = {
-    # Sve putanje relativne na ROOT
     "train_csv":    ROOT / "splits" / "train.csv",
     "val_csv":      ROOT / "splits" / "val.csv",
     "test_csv":     ROOT / "splits" / "test.csv",
     "base_dir":     ROOT,
     "output_dir":   ROOT / "checkpoints",
-
-    # ⭐ Backup na Drive — SAMO ako postoji (npr. u Colab-u)
-    # Na lokalnom računu ovo se ignoriše
     "drive_backup_dir": Path("/content/drive/MyDrive/ocr_checkpoints"),
 
     "img_height":    48,
-    "hidden_size":   256,
+    "hidden_size":   128,         # ⬇ manji model (bilo 256)
     "num_lstm_layers": 2,
 
     "batch_size":    32,
-    "num_epochs":    100,
-    "learning_rate": 3e-4,
-    "weight_decay":  5e-4,
+    "num_epochs":    200,          # ⬆ više epoha (bilo 100)
+    "learning_rate": 5e-4,         # ⬆ veći LR (bilo 3e-4)
+    "weight_decay":  1e-4,         # ⬇ manje regularizacije
     "grad_clip":     5.0,
     "min_height":    15,
-    "patience":      15,
+    "patience":      25,           # ⬆ više strpljenja (bilo 15)
     "save_every":    10,
     "use_amp":       True,
 }
 
 CONFIG["output_dir"].mkdir(exist_ok=True, parents=True)
 
-# Drive backup samo ako postoji (Colab)
 USE_DRIVE_BACKUP = Path("/content/drive/MyDrive").exists()
 if USE_DRIVE_BACKUP:
     CONFIG["drive_backup_dir"].mkdir(exist_ok=True, parents=True)
@@ -76,20 +67,25 @@ def cer(pred, target):
     if len(target) == 0:
         return 0.0 if len(pred) == 0 else 1.0
     d = np.zeros((len(pred) + 1, len(target) + 1), dtype=np.float32)
-    for i in range(len(pred) + 1): d[i, 0] = i
-    for j in range(len(target) + 1): d[0, j] = j
+    for i in range(len(pred) + 1):
+        d[i, 0] = i
+    for j in range(len(target) + 1):
+        d[0, j] = j
     for i in range(1, len(pred) + 1):
         for j in range(1, len(target) + 1):
-            cost = 0 if pred[i-1] == target[j-1] else 1
-            d[i, j] = min(d[i-1, j] + 1, d[i, j-1] + 1, d[i-1, j-1] + cost)
+            cost = 0 if pred[i - 1] == target[j - 1] else 1
+            d[i, j] = min(d[i - 1, j] + 1, d[i, j - 1] + 1, d[i - 1, j - 1] + cost)
     return d[len(pred), len(target)] / len(target)
 
 
-def evaluate(model, loader, ctc_loss):
+def evaluate(model, loader, ctc_loss, return_examples=False, n_examples=3):
+    """Evaluacija. Opciono vraća i primere predikcija."""
     model.eval()
     total_loss = 0
     total_cer = 0
     n = 0
+    examples = []
+
     with torch.no_grad():
         for batch in loader:
             if batch[0] is None:
@@ -110,13 +106,21 @@ def evaluate(model, loader, ctc_loss):
             log_probs_np = log_probs.permute(1, 0, 2).cpu().numpy()
             for i in range(B):
                 pred = decode_prediction(log_probs_np[i])
-                total_cer += cer(pred, label_strs[i])
+                c = cer(pred, label_strs[i])
+                total_cer += c
                 n += 1
-    return total_loss / max(len(loader), 1), total_cer / max(n, 1)
+                if return_examples and len(examples) < n_examples:
+                    examples.append((label_strs[i], pred, c))
+
+    avg_loss = total_loss / max(len(loader), 1)
+    avg_cer = total_cer / max(n, 1)
+
+    if return_examples:
+        return avg_loss, avg_cer, examples
+    return avg_loss, avg_cer
 
 
 def save_to_drive(local_path, name):
-    """Kopira fajl na Drive (ako postoji)."""
     if not USE_DRIVE_BACKUP:
         return
     try:
@@ -158,8 +162,8 @@ def train():
     optimizer = optim.AdamW(model.parameters(), lr=CONFIG["learning_rate"],
                             weight_decay=CONFIG["weight_decay"])
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min',
-                                                 factor=0.5, patience=3)
-    scaler = GradScaler(enabled=CONFIG["use_amp"])
+                                                     factor=0.5, patience=5)
+    scaler = GradScaler('cuda', enabled=CONFIG["use_amp"])
 
     best_val_loss = float('inf')
     patience_counter = 0
@@ -180,7 +184,7 @@ def train():
 
             optimizer.zero_grad()
 
-            with autocast(enabled=CONFIG["use_amp"]):
+            with autocast('cuda', enabled=CONFIG["use_amp"]):
                 logits = model(imgs)
                 T, B, C = logits.shape
                 log_probs = torch.nn.functional.log_softmax(logits, dim=2)
@@ -196,22 +200,33 @@ def train():
                 train_loss += loss.item()
 
         train_loss /= max(len(train_loader), 1)
-        val_loss, val_cer = evaluate(model, val_loader, ctc_loss)
+        val_loss, val_cer, val_examples = evaluate(
+            model, val_loader, ctc_loss,
+            return_examples=True, n_examples=3
+        )
         scheduler.step(val_loss)
 
-        history["train_loss"].append(train_loss)
-        history["val_loss"].append(val_loss)
-        history["val_cer"].append(val_cer)
+        history["train_loss"].append(float(train_loss))
+        history["val_loss"].append(float(val_loss))
+        history["val_cer"].append(float(val_cer))
 
         lr_now = optimizer.param_groups[0]['lr']
         print(f"Epoha {epoch:3d} | Train: {train_loss:.4f} | "
               f"Val: {val_loss:.4f} | CER: {val_cer:.4f} | "
               f"LR: {lr_now:.6f} | {time.time()-t0:.1f}s")
 
+        # ⭐ Primeri predikcija u svakoj epohi
+        print(f"  ── Primeri (epoha {epoch}) ──")
+        for tacno, pred, c in val_examples:
+            print(f"    Tačno : {tacno}")
+            print(f"    Predv.: {pred}")
+            print(f"    CER   : {c:.3f}")
+            print()
+
         if epoch % CONFIG["save_every"] == 0:
             ckpt_path = CONFIG["output_dir"] / f"checkpoint_epoch{epoch}.pt"
             torch.save({"epoch": epoch, "model": model.state_dict(),
-                        "val_loss": val_loss, "val_cer": val_cer}, ckpt_path)
+                        "val_loss": float(val_loss), "val_cer": float(val_cer)}, ckpt_path)
 
         if val_loss < best_val_loss:
             best_val_loss = val_loss
@@ -235,7 +250,7 @@ def train():
     test_loss, test_cer = evaluate(model, test_loader, ctc_loss)
     print(f"Test loss: {test_loss:.4f} | Test CER: {test_cer:.4f} ({100*test_cer:.2f}%)")
 
-    print(f"\n── PRIMERI PREDIKCIJA ──")
+    print(f"\n── PRIMERI PREDIKCIJA NA TEST SKUPU ──")
     model.eval()
     examples = []
     with torch.no_grad():
@@ -250,7 +265,6 @@ def train():
             for i in range(len(label_strs)):
                 pred = decode_prediction(log_probs_np[i])
                 examples.append((label_strs[i], pred, cer(pred, label_strs[i])))
-            break
 
     examples.sort(key=lambda x: x[2])
     print("\n── 5 NAJBOLJIH ──")
@@ -260,6 +274,7 @@ def train():
     for tacno, pred, c in examples[-5:]:
         print(f"  Tačno: {tacno}\n  Predv: {pred}\n  CER: {c:.3f}\n")
 
+    # ⭐ POPRAVLJENO: history sa float konverzijom
     history_path = CONFIG["output_dir"] / "history.json"
     with open(history_path, "w") as f:
         json.dump(history, f, indent=2)
