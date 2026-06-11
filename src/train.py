@@ -173,7 +173,16 @@ def train():
         model.train()
         train_loss = 0
 
-        for imgs, labels, label_lengths, _ in tqdm(train_loader, desc=f"Epoha {epoch}"):
+ # IZMENJENO: Prvo uzimamo ceo batch kao tuple da vidimo koliko elemenata ima
+        for batch in tqdm(train_loader, desc=f"Epoha {epoch}"):
+            if len(batch) == 4:
+                imgs, labels, label_lengths, _ = batch
+            elif len(batch) == 5:
+                # Ako tvoj collate_fn vraća 5 elemenata (npr. uključuje i originalne putanje ili input_lengths)
+                imgs, labels, label_lengths, _, _ = batch
+            else:
+                raise ValueError(f"Neočekivan broj elemenata u batch-u: {len(batch)}. Očekivano 4 ili 5.")
+
             imgs = imgs.to(device)
             labels = labels.to(device)
             label_lengths = label_lengths.to(device)
@@ -191,7 +200,7 @@ def train():
 
             loss.backward()
             
-            # Stroži gradient clipping (maksimalna norma 1.0 stabilizuje LSTM slojeve)
+            # Stroži gradient clipping
             torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
             
             optimizer.step()
