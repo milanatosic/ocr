@@ -41,7 +41,7 @@ CONFIG = {
     "num_lstm_layers": 2,
 
     "batch_size":      8,           # ← SMANJENO (zbog varijabilne širine, veći batch = više memorije)
-    "num_epochs":      80,
+    "num_epochs":      150,
     "learning_rate":   1e-4,
     "weight_decay":    1e-4,
 
