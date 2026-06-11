@@ -216,7 +216,12 @@ def train():
         if val_loss < best_val_loss:
             best_val_loss = val_loss
             patience_counter = 0
-            torch.save(model.state_dict(), Path(CONFIG["output_dir"]) / "best_model.pt")
+            # IZMENJENO: Čuva se ceo rečnik radi konzistentnosti formata
+            torch.save({
+                "epoch": epoch,
+                "model": model.state_dict(),
+                "optimizer": optimizer.state_dict()
+            }, Path(CONFIG["output_dir"]) / "best_model.pt")
             print(f"  → Novi najbolji model sačuvan (val_loss: {best_val_loss:.4f})")
         else:
             patience_counter += 1
@@ -226,7 +231,10 @@ def train():
 
     # ── 6. Finalna Test Evaluacija ────────────────────────────────────────────
     print("\n── Pokrećem Test Evaluaciju Sa Najboljim Modelom ──────────────────")
-    model.load_state_dict(torch.load(Path(CONFIG["output_dir"]) / "best_model.pt"))
+    # IZMENJENO: Pravilno učitavanje state_dict-a iz sačuvanog rečnika
+    checkpoint = torch.load(Path(CONFIG["output_dir"]) / "best_model.pt")
+    model.load_state_dict(checkpoint["model"])
+    
     test_loss, test_cer = evaluate(model, test_loader, ctc_loss)
     print(f"Finalni rezultati -> Test loss: {test_loss:.4f} | Test CER: {test_cer:.4f}")
 
