@@ -378,8 +378,13 @@ def train():
 
     # ── 6. Finalna evaluacija ─────────────────────────────────────────────────
     print("\n── Test Evaluacija ──────────────────────────────────────────────")
-    checkpoint = torch.load(Path(CONFIG["output_dir"]) / "best_model.pt")
-    model.load_state_dict(checkpoint["model"])
+    model.load_state_dict(
+    torch.load(
+        Path(CONFIG["output_dir"]) / "best_model.pt", 
+        weights_only=True,           # eksplicitno
+        map_location=device
+        )
+    )
     print(f"Najbolji model iz epohe {checkpoint['epoch']}")
 
     test_loss, test_cer_score = evaluate(model, test_loader, ctc_loss)
