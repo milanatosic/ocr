@@ -33,27 +33,32 @@ class ResidualBlock(nn.Module):
 
 
 class CRNN(nn.Module):
-    def __init__(self, num_classes, img_height=48, hidden_size=128, num_lstm_layers=1):
+    def __init__(self, num_classes, img_height=48, hidden_size=256, num_lstm_layers=2):
         super().__init__()
 
         self.cnn = nn.Sequential(
-            # Blok 1: 1 -> 32 | H: 48 -> 24
+            # Blok 1: 1 -> 32 | H: 48 -> 24 | Š: NEPROMENJENA  ← KLJUČNA IZMENA
             nn.Conv2d(1, 32, 3, padding=1, bias=False),
             nn.BatchNorm2d(32),
             nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=(2, 2), stride=(2, 2)),
-            # Blok 2: 32 -> 64 | H: 24 -> 12
+            nn.MaxPool2d(kernel_size=(2, 1), stride=(2, 1)),   # ← bilo (2,2), sada (2,1)
+
+            # Blok 2: 32 -> 64 | H: 24 -> 12 | Š: NEPROMENJENA
             ResidualBlock(32, 64),
             nn.MaxPool2d(kernel_size=(2, 1), stride=(2, 1)),
-            # Blok 3: 64 -> 128 | H: 12 -> 6
+
+            # Blok 3: 64 -> 128 | H: 12 -> 6 | Š: NEPROMENJENA
             ResidualBlock(64, 128),
             nn.MaxPool2d(kernel_size=(2, 1), stride=(2, 1)),
-            # Blok 4: 128 -> 256 | H: 6 -> 3
+
+            # Blok 4: 128 -> 256 | H: 6 -> 3 | Š: NEPROMENJENA
             ResidualBlock(128, 256),
             nn.MaxPool2d(kernel_size=(2, 1), stride=(2, 1)),
-            # Blok 5: 256 -> 512 | H: 3 -> 1
+
+            # Blok 5: 256 -> 512 | H: 3 -> 1 | Š: NEPROMENJENA
             ResidualBlock(256, 512),
             nn.MaxPool2d(kernel_size=(3, 1), stride=(3, 1)),
+
             nn.Dropout2d(0.3),
         )
 
@@ -65,15 +70,15 @@ class CRNN(nn.Module):
             num_layers=num_lstm_layers,
             batch_first=False,
             bidirectional=True,
-            dropout=0.0,  # 0 jer je num_lstm_layers=1
+            dropout=0.3 if num_lstm_layers > 1 else 0.0,  # ← dropout samo ako ima >1 sloj
         )
 
         self.fc = nn.Linear(hidden_size * 2, num_classes)
 
     def forward(self, x):
-        features = self.cnn(x)                # [B, 512, 1, W']
-        features = features.squeeze(2)        # [B, 512, W']
-        features = features.permute(2, 0, 1)  # [T, B, 512]
+        features = self.cnn(x)                # [B, 512, 1, W]  (W = širina ulaza!)
+        features = features.squeeze(2)        # [B, 512, W]
+        features = features.permute(2, 0, 1)  # [T, B, 512]   (T = W)
         features = self.dropout(features)
         lstm_out, _ = self.lstm(features)     # [T, B, hidden*2]
         logits = self.fc(lstm_out)            # [T, B, num_classes]
