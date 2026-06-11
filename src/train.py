@@ -103,7 +103,16 @@ def evaluate(model, loader, ctc_loss):
     n = 0
 
     with torch.no_grad():
-        for imgs, labels, label_lengths, label_strs in loader:
+        # IZMENJENO: Uzimamo ceo batch pa ga bezbedno raspakujemo u zavisnosti od dužine
+        for batch in loader:
+            if len(batch) == 4:
+                imgs, labels, label_lengths, label_strs = batch
+            elif len(batch) == 5:
+                # Ako ima 5 elemenata, preskačemo srednji (obično input_lengths) jer ga računamo dole dinamički
+                imgs, labels, _, label_lengths, label_strs = batch
+            else:
+                raise ValueError(f"Neočekivan broj elemenata u evaluacionom batch-u: {len(batch)}")
+
             imgs = imgs.to(device)
             labels = labels.to(device)
             label_lengths = label_lengths.to(device)
@@ -247,11 +256,17 @@ def train():
     test_loss, test_cer = evaluate(model, test_loader, ctc_loss)
     print(f"Finalni rezultati -> Test loss: {test_loss:.4f} | Test CER: {test_cer:.4f}")
 
-    # Ispis uzoraka predikcija na samom kraju treninga
+# Ispis uzoraka predikcija na samom kraju treninga
     print("\n── Nasumični primeri predikcija (Vizuelna provera) ────────────────")
     model.eval()
     with torch.no_grad():
-        for imgs, labels, label_lengths, label_strs in test_loader:
+        for batch in test_loader:
+            # Bezbedno raspakivanje za test primere
+            if len(batch) == 4:
+                imgs, _, _, label_strs = batch
+            else:
+                imgs, _, _, _, label_strs = batch
+                
             imgs = imgs.to(device)
             logits = model(imgs)
             log_probs = torch.nn.functional.log_softmax(logits, dim=2)
