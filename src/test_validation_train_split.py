@@ -40,7 +40,7 @@ def analiziraj_i_podeli_po_korenu(csv_path):
     ]
     
     VAL_GRUPE = [
-        'grejanje', 'jotel'
+        'jotel', 'grejanje',
         # ... dopuni listu za validaciju (npr. ovde staviš neku ćiriličnu grupu)
     ]
     
