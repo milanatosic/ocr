@@ -31,64 +31,56 @@ class ResidualBlock(nn.Module):
 
 
 class CRNN(nn.Module):
-    """
-    CRNN arhitektura:
-    - CNN (ResNet-like) za ekstrakciju features (širina se smanjuje samo 2 puta!)
-    - BiLSTM za sekvencijalno modelovanje
-    - Linearni sloj za predikciju karaktera
-    """
-    def __init__(self, num_classes, img_height=48, hidden_size=256, num_lstm_layers=2):
+    def __init__(self, num_classes, img_height=48, hidden_size=128, num_lstm_layers=1):
         super().__init__()
 
-        # ── CNN DEO (Smanjenje širine za samo 2x kroz celu mrežu) ─────────────────
         self.cnn = nn.Sequential(
-            # Blok 1: 1 -> 32 | H: 48 -> 24 | W: W -> W/2
+            # Blok 1: 1 -> 32 | H: 48 -> 24
             nn.Conv2d(1, 32, 3, padding=1, bias=False),
             nn.BatchNorm2d(32),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=(2, 2), stride=(2, 2)),
 
-            # Blok 2: 32 -> 64 | H: 24 -> 12 | W: W/2 ostaje W/2 (asimetrični pooling)
+            # Blok 2: 32 -> 64 | H: 24 -> 12
             ResidualBlock(32, 64),
             nn.MaxPool2d(kernel_size=(2, 1), stride=(2, 1)),
 
-            # Blok 3: 64 -> 128 | H: 12 -> 6 | W: W/2 ostaje W/2
+            # Blok 3: 64 -> 128 | H: 12 -> 6
             ResidualBlock(64, 128),
             nn.MaxPool2d(kernel_size=(2, 1), stride=(2, 1)),
 
-            # Blok 4: 128 -> 256 | H: 6 -> 3 | W: W/2 ostaje W/2
+            # Blok 4: 128 -> 256 | H: 6 -> 3
             ResidualBlock(128, 256),
             nn.MaxPool2d(kernel_size=(2, 1), stride=(2, 1)),
 
-            # Blok 5: 256 -> 512 | H: 3 -> 1 | W: W/2 ostaje W/2
+            # Blok 5: 256 -> 512 | H: 3 -> 1
             ResidualBlock(256, 512),
             nn.MaxPool2d(kernel_size=(3, 1), stride=(3, 1)),
 
-            nn.Dropout2d(0.2),
+            nn.Dropout2d(0.3),  # bilo 0.2
         )
 
-        lstm_input_size = 512
+        self.dropout = nn.Dropout(p=0.4)  # novo — između CNN i LSTM
 
-        # ── BiLSTM DEO ───────────────────────────────────────────────────────
         self.lstm = nn.LSTM(
-            input_size=lstm_input_size,
+            input_size=512,
             hidden_size=hidden_size,
             num_layers=num_lstm_layers,
-            batch_first=False,   # Izlaz [T, B, features]
-            bidirectional=True,  # Čita tekst u oba smera
-            dropout=0.3 if num_lstm_layers > 1 else 0.0,
+            batch_first=False,
+            bidirectional=True,
+            dropout=0.0,  # 0 jer je num_lstm_layers=1 (dropout ne radi sa 1 slojem)
         )
 
-        # ── IZLAZNI SLOJ ─────────────────────────────────────────────────────
-        self.fc = nn.Linear(hidden_size * 2, num_classes)  # *2 zbog dvosmernog LSTM-a
+        self.fc = nn.Linear(hidden_size * 2, num_classes)
 
     def forward(self, x):
-        # x: [B, 1, H, W]
-        features = self.cnn(x)               # Izlaz: [B, 512, 1, W/2]
-        features = features.squeeze(2)       # Izlaz: [B, 512, W/2]
-        features = features.permute(2, 0, 1) # Izlaz: [W/2, B, 512] -> [T, B, features]
+        features = self.cnn(x)               # [B, 512, 1, W/2]
+        features = features.squeeze(2)       # [B, 512, W/2]
+        features = features.permute(2, 0, 1) # [T, B, 512]
 
-        lstm_out, _ = self.lstm(features)    # Izlaz: [T, B, hidden_size * 2]
-        logits = self.fc(lstm_out)           # Izlaz: [T, B, num_classes]
+        features = self.dropout(features)    # novo — regularizacija pre LSTM-a
+
+        lstm_out, _ = self.lstm(features)    # [T, B, hidden_size * 2]
+        logits = self.fc(lstm_out)           # [T, B, num_classes]
 
         return logits

@@ -39,17 +39,17 @@ CONFIG = {
     "img_height":     48,
     "img_width":      768,
 
-    "hidden_size":    256,
-    "num_lstm_layers": 2,
+    "hidden_size":    128,    # bilo 256
+    "num_lstm_layers": 1,     # bilo 2
 
     "batch_size":     16,
-    "num_epochs":     50,
-    "learning_rate":  5e-4,   # Smanjen LR (bezbedniji i stabilniji za CTC)
-    "weight_decay":   0,      # Isključen na početku da model lakše nauči strukturu fontova
+    "num_epochs":     40,     # bilo 50
+    "learning_rate":  3e-4,   # bilo 5e-4
+    "weight_decay":   1e-3,   # bilo 0 — najvažnija izmena
 
-    "min_height":     15,     # Filtriraj presitne isečke
-    "patience":       8,      # Early stopping
-    "save_every":     5,      # Periodični checkpoint na svakih N epoha
+    "min_height":     15,
+    "patience":       6,      # bilo 8
+    "save_every":     5,
 }
 
 Path(CONFIG["output_dir"]).mkdir(exist_ok=True, parents=True)
