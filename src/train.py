@@ -103,18 +103,24 @@ def evaluate(model, loader, ctc_loss):
     n = 0
 
     with torch.no_grad():
-        # IZMENJENO: Uzimamo ceo batch pa ga bezbedno raspakujemo u zavisnosti od dužine
         for batch in loader:
+            # Bezbedno raspakivanje nezavisno od toga da li loader vraća 4 ili 5 elemenata
             if len(batch) == 4:
                 imgs, labels, label_lengths, label_strs = batch
             elif len(batch) == 5:
-                # Ako ima 5 elemenata, preskačemo srednji (obično input_lengths) jer ga računamo dole dinamički
                 imgs, labels, _, label_lengths, label_strs = batch
             else:
                 raise ValueError(f"Neočekivan broj elemenata u evaluacionom batch-u: {len(batch)}")
 
+            # Osiguravanje da su promenljive ispravnog tipa (PyTorch Tensor) pre slanja na GPU
             imgs = imgs.to(device)
+            
+            if not isinstance(labels, torch.Tensor):
+                labels = torch.tensor(labels, dtype=torch.long)
             labels = labels.to(device)
+
+            if not isinstance(label_lengths, torch.Tensor):
+                label_lengths = torch.tensor(label_lengths, dtype=torch.long)
             label_lengths = label_lengths.to(device)
 
             logits = model(imgs)  # [T, B, C]
@@ -182,18 +188,24 @@ def train():
         model.train()
         train_loss = 0
 
- # IZMENJENO: Prvo uzimamo ceo batch kao tuple da vidimo koliko elemenata ima
         for batch in tqdm(train_loader, desc=f"Epoha {epoch}"):
+            # Bezbedno raspakivanje unutar trening petlje
             if len(batch) == 4:
                 imgs, labels, label_lengths, _ = batch
             elif len(batch) == 5:
-                # Ako tvoj collate_fn vraća 5 elemenata (npr. uključuje i originalne putanje ili input_lengths)
                 imgs, labels, label_lengths, _, _ = batch
             else:
-                raise ValueError(f"Neočekivan broj elemenata u batch-u: {len(batch)}. Očekivano 4 ili 5.")
+                raise ValueError(f"Neočekivan broj elemenata u batch-u: {len(batch)}")
 
+            # Osiguravanje da su promenljive ispravnog tipa (PyTorch Tensor) pre slanja na GPU
             imgs = imgs.to(device)
+            
+            if not isinstance(labels, torch.Tensor):
+                labels = torch.tensor(labels, dtype=torch.long)
             labels = labels.to(device)
+
+            if not isinstance(label_lengths, torch.Tensor):
+                label_lengths = torch.tensor(label_lengths, dtype=torch.long)
             label_lengths = label_lengths.to(device)
 
             optimizer.zero_grad()
@@ -209,7 +221,7 @@ def train():
 
             loss.backward()
             
-            # Stroži gradient clipping
+            # Stroži gradient clipping (maksimalna norma 1.0 stabilizuje LSTM slojeve)
             torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
             
             optimizer.step()
@@ -234,7 +246,7 @@ def train():
         if val_loss < best_val_loss:
             best_val_loss = val_loss
             patience_counter = 0
-            # IZMENJENO: Čuva se ceo rečnik radi konzistentnosti formata
+            # Čuva se kompletan rečnik radi konzistentnosti sa ostalim checkpoint-ima
             torch.save({
                 "epoch": epoch,
                 "model": model.state_dict(),
@@ -249,19 +261,19 @@ def train():
 
     # ── 6. Finalna Test Evaluacija ────────────────────────────────────────────
     print("\n── Pokrećem Test Evaluaciju Sa Najboljim Modelom ──────────────────")
-    # IZMENJENO: Pravilno učitavanje state_dict-a iz sačuvanog rečnika
+    # Pravilno učitavanje model_state iz sačuvanog rečnika
     checkpoint = torch.load(Path(CONFIG["output_dir"]) / "best_model.pt")
     model.load_state_dict(checkpoint["model"])
     
     test_loss, test_cer = evaluate(model, test_loader, ctc_loss)
     print(f"Finalni rezultati -> Test loss: {test_loss:.4f} | Test CER: {test_cer:.4f}")
 
-# Ispis uzoraka predikcija na samom kraju treninga
+    # Ispis uzoraka predikcija na samom kraju treninga
     print("\n── Nasumični primeri predikcija (Vizuelna provera) ────────────────")
     model.eval()
     with torch.no_grad():
         for batch in test_loader:
-            # Bezbedno raspakivanje za test primere
+            # Bezbedno raspakivanje za test vizuelni prikaz
             if len(batch) == 4:
                 imgs, _, _, label_strs = batch
             else:
