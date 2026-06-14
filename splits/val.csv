@@ -1,0 +1,153 @@
+image_path,label,racun_id
+output_rows/grejanje1_racun_za_grejanje_r0.jpg,Naziv i vrsta usluge Datum Količina JM Cena Iznos,grejanje1
+output_rows/grejanje1_racun_za_grejanje_r1.jpg,"Naknada po osnovu toplotne dobiti 31.12.202 53.00 m2 150.720 100.00% 7,988.16",grejanje1
+output_rows/grejanje1_racun_za_grejanje_r2.jpg,"Popust isključenje 90.00% 7,189.34",grejanje1
+output_rows/grejanje1_racun_za_grejanje_r3.jpg,Kamata 33.78,grejanje1
+output_rows/grejanje1_racun_za_grejanje_r4.jpg,Ukupna naknada 798.82,grejanje1
+output_rows/grejanje1_racun_za_grejanje_r5.jpg,PDV 79.88,grejanje1
+output_rows/mts11_mts_r0.jpg,"1.Naknada 1.749,17 1.132,83 616,34 20% 123,27",mts11
+output_rows/mts11_mts_r1.jpg,Usluga Iznos Popust Osnovica StopaPDV  PDV,mts11
+output_rows/mts11_mts_uplatnica_r2.jpg,01.03.2026.-31.03.2026.,mts11
+output_rows/mts11_mts_uplatnica_r3.jpg,"=739,61 Din.",mts11
+output_rows/mts11_mts_uplatnica_r4.jpg,97 76-294-064-3441665,mts11
+output_rows/mts11_mts_iznos_r5.jpg,"UKUPNO ZA PLAĆANJE: 739,61",mts11
+output_rows/uplatnica23_uplatnica_r0.jpg,Šifra,uplatnica23
+output_rows/uplatnica23_uplatnica_r1.jpg,plaćanja,uplatnica23
+output_rows/uplatnica23_uplatnica_r2.jpg,Valuta,uplatnica23
+output_rows/uplatnica23_uplatnica_r3.jpg,153,uplatnica23
+output_rows/uplatnica23_uplatnica_r4.jpg,941,uplatnica23
+output_rows/uplatnica23_uplatnica_r5.jpg,Iznos,uplatnica23
+output_rows/uplatnica23_uplatnica_r6.jpg,NALOG ZA UPLATU,uplatnica23
+output_rows/uplatnica23_uplatnica_r7.jpg,"5,000.00",uplatnica23
+output_rows/uplatnica23_uplatnica_r8.jpg,Račun primaoca,uplatnica23
+output_rows/uplatnica23_uplatnica_r9.jpg,840000071312184357,uplatnica23
+output_rows/uplatnica23_uplatnica_r10.jpg,Model i poyiv na broj(odobrenje),uplatnica23
+output_rows/uplatnica23_uplatnica_r11.jpg,97,uplatnica23
+output_rows/uplatnica23_uplatnica_r12.jpg,832230904972800070,uplatnica23
+output_rows/uplatnica23_uplatnica_r13.jpg,Hitno,uplatnica23
+output_rows/uplatnica17_uplatnica_r0.jpg,Šifra,uplatnica17
+output_rows/uplatnica17_uplatnica_r1.jpg,plaćanja,uplatnica17
+output_rows/uplatnica17_uplatnica_r2.jpg,Valuta,uplatnica17
+output_rows/uplatnica17_uplatnica_r3.jpg,166,uplatnica17
+output_rows/uplatnica17_uplatnica_r4.jpg,941,uplatnica17
+output_rows/uplatnica17_uplatnica_r5.jpg,Iznos,uplatnica17
+output_rows/uplatnica17_uplatnica_r6.jpg,"3,106.00",uplatnica17
+output_rows/uplatnica17_uplatnica_r7.jpg,NALOG ZA UPLATU /,uplatnica17
+output_rows/uplatnica17_uplatnica_r8.jpg,Račun primaoca / platioca / broj kartice,uplatnica17
+output_rows/uplatnica17_uplatnica_r9.jpg,5354 ****2474,uplatnica17
+output_rows/uplatnica17_uplatnica_r10.jpg,Model i poziv na broj(odobrenje) / (zaduženje),uplatnica17
+output_rows/uplatnica17_uplatnica_r11.jpg,CCI50012-236158,uplatnica17
+output_rows/odrzavanje_zgrade12_stambene_usluge_nis_r0.jpg,Шифра објекта,odrzavanje_zgrade12
+output_rows/odrzavanje_zgrade12_stambene_usluge_nis_r1.jpg,8423801,odrzavanje_zgrade12
+output_rows/odrzavanje_zgrade12_stambene_usluge_nis_r2.jpg,Број гл.водомера,odrzavanje_zgrade12
+output_rows/odrzavanje_zgrade12_stambene_usluge_nis_r3.jpg,Прет. ст.водо,odrzavanje_zgrade12
+output_rows/odrzavanje_zgrade12_stambene_usluge_nis_r4.jpg,Ново ст.водо,odrzavanje_zgrade12
+output_rows/odrzavanje_zgrade12_stambene_usluge_nis_r5.jpg,Очитано,odrzavanje_zgrade12
+output_rows/odrzavanje_zgrade12_stambene_usluge_nis_r6.jpg,Очитано,odrzavanje_zgrade12
+output_rows/odrzavanje_zgrade12_stambene_usluge_nis_r7.jpg,31800,odrzavanje_zgrade12
+output_rows/odrzavanje_zgrade12_stambene_usluge_nis_r8.jpg,1/25,odrzavanje_zgrade12
+output_rows/odrzavanje_zgrade12_stambene_usluge_nis_r9.jpg,4,odrzavanje_zgrade12
+output_rows/odrzavanje_zgrade12_stambene_usluge_nis_r10.jpg,74,odrzavanje_zgrade12
+output_rows/odrzavanje_zgrade12_stambene_usluge_nis_r11.jpg,10.05.2025,odrzavanje_zgrade12
+output_rows/odrzavanje_zgrade12_stambene_usluge_nis_r12.jpg,10.06.2025,odrzavanje_zgrade12
+output_rows/odrzavanje_zgrade12_stambene_usluge_nis_r13.jpg,131.41,odrzavanje_zgrade12
+output_rows/struja61_racun_za_struju_r0.jpg,ОБРАЧУН ЗА ЕЛЕКТРИЧНУ ЕНЕРГИЈУ,struja61
+output_rows/struja61_racun_za_struju_r1.jpg,ТАРИФА,struja61
+output_rows/struja61_racun_za_struju_r2.jpg,Утрошено Цена по Износ,struja61
+output_rows/struja61_racun_za_struju_r3.jpg,(kW/kWh) јединици (динара),struja61
+output_rows/struja61_racun_za_struju_r4.jpg,ТРОШКОВИ КОЈИ НЕ ЗАВИСЕ ОД ПОТРОШЊЕ ЕЛЕКТРИЧНЕ ЕНЕРГИЈЕ,struja61
+output_rows/struja61_racun_za_struju_r5.jpg,"1 Обрачунска снага(kW) 6,90 54,2580 374,38",struja61
+output_rows/struja61_racun_za_struju_r6.jpg,"2 Трошак гарантованог снабдевача 160,67",struja61
+output_rows/struja61_racun_za_struju_r7.jpg,"3 Енергија(kWh) 42 321,10",struja61
+output_rows/struja61_racun_za_struju_r8.jpg,"Виша тарифа(ВТ) 33 9,1092 300,60",struja61
+output_rows/struja61_racun_za_struju_r9.jpg,"Нижа тарифа(НТ) 9 2,2773 20,50",struja61
+output_rows/struja61_racun_za_struju_r10.jpg,Зелена зона,struja61
+output_rows/struja61_racun_za_struju_r11.jpg,Плава зона,struja61
+output_rows/struja61_racun_za_struju_r12.jpg,Црвена зона,struja61
+output_rows/struja61_racun_za_struju_r13.jpg,Једнотарифно(ЈТ),struja61
+output_rows/struja61_racun_za_struju_r14.jpg,"Остварена просечна цена електричне енергије (дин/kWh): 20,38",struja61
+output_rows/struja61_racun_za_struju_r15.jpg,"4 ЗАДУЖЕЊЕ ЗА ЕЛЕКТРИЧНУ ЕНЕРГИЈУ У ОБРАЧУНСКОМ ПЕРИОДУ(1+2+3) 856,15",struja61
+output_rows/struja56_racun_za_struju_r0.jpg,ТАРИФА,struja56
+output_rows/struja56_racun_za_struju_r1.jpg,Утрошено Цена по Износ,struja56
+output_rows/struja56_racun_za_struju_r2.jpg,(kW/kWh) јединици (динара),struja56
+output_rows/struja56_racun_za_struju_r3.jpg,ТРОШКОВИ КОЈИ НЕ ЗАВИСЕ ОД ПОТРОШЊЕ ЕЛЕКТРИЧНЕ ЕНЕРГИЈЕ,struja56
+output_rows/struja56_racun_za_struju_r4.jpg,"1 Обрачунска снага (kW) 6,90 54,2580 374,38",struja56
+output_rows/struja56_racun_za_struju_r5.jpg,"2 Трошак гарантованог снабдевача 160,67",struja56
+output_rows/struja56_racun_za_struju_r6.jpg,"3 Енергија (kWh) 289 1.990,36",struja56
+output_rows/struja56_racun_za_struju_r7.jpg,"Виша тарифа (ВТ) 195 9,1092 1.776,29",struja56
+output_rows/struja56_racun_za_struju_r8.jpg,"Нижа тарифа (НТ) 94 2,2773 214,07",struja56
+output_rows/struja56_racun_za_struju_r9.jpg,Једнотарифно(ЈТ),struja56
+output_rows/struja56_racun_za_struju_r10.jpg,Зелена зона,struja56
+output_rows/struja56_racun_za_struju_r11.jpg,Плава зона,struja56
+output_rows/struja56_racun_za_struju_r12.jpg,Црвена зона,struja56
+output_rows/struja56_racun_za_struju_r13.jpg,"Остварена просечна цена електричне енергије (дин/kWh): 8,74",struja56
+output_rows/struja56_racun_za_struju_r14.jpg,"4 ЗАДУЖЕЊЕ ЗА ЕЛЕКТРИЧНУ ЕНЕРГИЈУ У ОБРАЧУНСКОМ ПЕРИОДУ(1+2+3) 2.525,41",struja56
+output_rows/smece5_racun_za_smece_r0.jpg,Naziv i vrsta Datum Količina JM Cena Iznos,smece5
+output_rows/smece5_racun_za_smece_r1.jpg,Smeće stanb-posl. 28.02.2025 53.00 m2 8.230 436.19,smece5
+output_rows/smece5_racun_za_smece_r2.jpg,Ukupna naknada: 436.19,smece5
+output_rows/smece5_racun_za_smece_r3.jpg,PDV: 43.62,smece5
+output_rows/smece5_racun_za_smece_r4.jpg,Ukupno za račun: 479.81,smece5
+output_rows/struja3_racun_za_struju_r0.jpg,ОБРАЧУН ЗА ЕЛЕКТРИЧНУ ЕНЕРГИЈУ,struja3
+output_rows/struja3_racun_za_struju_r1.jpg,ТАРИФА,struja3
+output_rows/struja3_racun_za_struju_r2.jpg,Утрошено Цена по Износ,struja3
+output_rows/struja3_racun_za_struju_r3.jpg,(kW/kWh) јединици (динара),struja3
+output_rows/struja3_racun_za_struju_r4.jpg,ТРОШКОВИ КОЈИ НЕ ЗАВИСЕ ОД ПОТРОШЊЕ ЕЛЕКТРИЧНЕ ЕНЕРГИЈЕ,struja3
+output_rows/struja3_racun_za_struju_r5.jpg,"1 Обрачунска снага(kW) 6,90 50,443 348,06",struja3
+output_rows/struja3_racun_za_struju_r6.jpg,"2 Трошкови гарантованог снабдевача 137,93",struja3
+output_rows/struja3_racun_za_struju_r7.jpg,"3 ЕНЕРГИЈЕ(kWh) 291 1.375,51",struja3
+output_rows/struja3_racun_za_struju_r8.jpg,"Виша тарифа(ВТ) 199 6,196 1.233,00",struja3
+output_rows/struja3_racun_za_struju_r9.jpg,"Нижа тарифа(НТ) 92 1,549 142,51",struja3
+output_rows/struja3_racun_za_struju_r10.jpg,Једнотарифно(ЈТ)/ДУТ,struja3
+output_rows/struja3_racun_za_struju_r11.jpg,Зелена зона,struja3
+output_rows/struja3_racun_za_struju_r12.jpg,Плава зона,struja3
+output_rows/struja3_racun_za_struju_r13.jpg,Црвена зона,struja3
+output_rows/struja3_racun_za_struju_r14.jpg,"Остварена просечна цена електричне енергије(дин/kWh): 6,40",struja3
+output_rows/struja3_racun_za_struju_r15.jpg,"Оства4 ЗАДУЖЕЊЕ ЗА ЕЛЕКТРИЧНУ ЕНЕРГИЈУ У ОБРАЧУНСКОМ ПЕРИОДУ(1+2+3) 1.861,50",struja3
+output_rows/struja45_racun_za_struju_r0.jpg,ОБРАЧУН ЗА ЕЛЕКТРИЧНУ ЕНЕРГИЈУ,struja45
+output_rows/struja45_racun_za_struju_r1.jpg,ТАРИФА,struja45
+output_rows/struja45_racun_za_struju_r2.jpg,Утрошено Цена по Износ,struja45
+output_rows/struja45_racun_za_struju_r3.jpg,(kW/kWh) јединици (динара),struja45
+output_rows/struja45_racun_za_struju_r4.jpg,ТРОШКОВИ КОЈИ НЕ ЗАВИСЕ ОД ПОТРОШЊЕ ЕЛЕКТРИЧНЕ ЕНЕРГИЈЕ,struja45
+output_rows/struja45_racun_za_struju_r5.jpg,"1 Обрачунска снага(kW) 6,90 54,2580 374,38",struja45
+output_rows/struja45_racun_za_struju_r6.jpg,"2 Трошак гарантованог снабдевача 160,67",struja45
+output_rows/struja45_racun_za_struju_r7.jpg,"3 Енергија (kWh) 114 840,32",struja45
+output_rows/struja45_racun_za_struju_r8.jpg,Зелена зона,struja45
+output_rows/struja45_racun_za_struju_r9.jpg,"Виша тарифа (ВТ) 85 9,1092 774,28",struja45
+output_rows/struja45_racun_za_struju_r10.jpg,"Нижа тарифа (НТ) 29 2,2773 66,04",struja45
+output_rows/struja45_racun_za_struju_r11.jpg,Плава зона,struja45
+output_rows/struja45_racun_za_struju_r12.jpg,Једнотарифно(ЈТ),struja45
+output_rows/struja45_racun_za_struju_r13.jpg,Црвена зона,struja45
+output_rows/struja45_racun_za_struju_r14.jpg,"Остварена просечна цена електричне енергије (дин/kWh): 12,06",struja45
+output_rows/struja45_racun_za_struju_r15.jpg,"4 ЗАДУЖЕЊЕ ЗА ЕЛЕКТРИЧНУ ЕНЕРГИЈУ У ОБРАЧУНСКОМ ПЕРИОДУ (1+2+3) 1.375,37",struja45
+output_rows/struja44_racun_za_struju_r0.jpg,ОБРАЧУН ЗА ЕЛЕКТРИЧНУ ЕНЕРГИЈУ,struja44
+output_rows/struja44_racun_za_struju_r1.jpg,ТАРИФА,struja44
+output_rows/struja44_racun_za_struju_r2.jpg,Утрошено Цена по Износ,struja44
+output_rows/struja44_racun_za_struju_r3.jpg,(kW/kWh) јединици (динара),struja44
+output_rows/struja44_racun_za_struju_r4.jpg,"1 Обрачунска снага (kW) 6,90 54,2580 374,38",struja44
+output_rows/struja44_racun_za_struju_r5.jpg,"2 Трошак гарантованог снабдевача 146,52",struja44
+output_rows/struja44_racun_za_struju_r6.jpg,"3 Енергија (kWh) 79 527,25",struja44
+output_rows/struja44_racun_za_struju_r7.jpg,"Виша тарифа(ВТ) 58 8,3360 483,49",struja44
+output_rows/struja44_racun_za_struju_r8.jpg,"Нижа тарифа(НТ) 21 2,0840 43,76",struja44
+output_rows/struja44_racun_za_struju_r9.jpg,"Остварена просечна цена електричне енергије (дин/kWh): 13,27",struja44
+output_rows/struja44_racun_za_struju_r10.jpg,"1.048,15",struja44
+output_rows/struja43_racun_za_struju_r0.jpg,ОБРАЧУН ЗА ЕЛЕКТРИЧНУ ЕНЕРГИЈУ,struja43
+output_rows/struja43_racun_za_struju_r1.jpg,ТАРИФА,struja43
+output_rows/struja43_racun_za_struju_r2.jpg,Утрошено Цена по Износ,struja43
+output_rows/struja43_racun_za_struju_r3.jpg,(kW/kWh) јединици (динара),struja43
+output_rows/struja43_racun_za_struju_r4.jpg,Трошкови који не зависе од потрошње електричне еенргије,struja43
+output_rows/struja43_racun_za_struju_r5.jpg,"1 Обрачунска снага(kW) 6,90 60,8947 420,17",struja43
+output_rows/struja43_racun_za_struju_r6.jpg,"2 Трошкови гарантованог снабдевача 160,67",struja43
+output_rows/struja43_racun_za_struju_r7.jpg,"3 Енергија(kWh) 175 1.372,35",struja43
+output_rows/struja43_racun_za_struju_r8.jpg,"Виша тарифа(ВТ) 132 9,6136 1.269,00",struja43
+output_rows/struja43_racun_za_struju_r9.jpg,"Нижа тарифа(НТ) 43 2,4034 103,35",struja43
+output_rows/struja43_racun_za_struju_r10.jpg,Зелена зона,struja43
+output_rows/struja43_racun_za_struju_r11.jpg,Плава зона,struja43
+output_rows/struja43_racun_za_struju_r12.jpg,Црвена зона,struja43
+output_rows/struja43_racun_za_struju_r13.jpg,ЈТ/ДУТ,struja43
+output_rows/struja43_racun_za_struju_r14.jpg,"Остварена просечна цена електричне енергије (дин/kWh): 11,16",struja43
+output_rows/struja43_racun_za_struju_r15.jpg,"ЗАДУЖЕЊЕ ЗА ЕЛЕКТРИЧНУ ЕНЕРГИЈУ У ОБРАЧУНСКОМ ПЕРИОДУ(1+2+3) 1.953,19",struja43
+output_rows/struja33_racun_za_struju_r0.jpg,ПОТРОШЊА У ОБРАЧУНСКОМ ПЕРИОДУ 356kWh,struja33
+output_rows/struja33_racun_za_struju_r1.jpg,"А УКУПНО ЗАДУЖЕЊЕ ЗА ОБРАЧУНСКИ ПЕРИОД 3.242,06 дин",struja33
+output_rows/struja33_racun_za_struju_r2.jpg,"Б ДУГ ИЗ ПРЕТХОДНОГ ОБРАЧУНСКОГ ПЕРИОДА 7.697,82 дин",struja33
+output_rows/struja33_racun_za_struju_r3.jpg,"В ЗА УПЛАТУ ЗА ЕЛЕКТРИЧНУ ЕНЕРГИЈУ (А+Б) иЗП 11.107,11 дин",struja33
+output_rows/struja33_racun_za_struju_r4.jpg,Рок за плаћање: 28.06.2021.,struja33

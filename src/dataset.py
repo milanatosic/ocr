@@ -1,11 +1,3 @@
-"""
-Dataset i collate_fn za CRNN OCR.
-
-Promene:
-- collate_fn vraća 4 vrednosti (label_strs ispravno raspakovan)
-- Jača augmentacija
-"""
-
 import torch
 from torch.utils.data import Dataset
 import pandas as pd

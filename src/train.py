@@ -25,7 +25,7 @@ from dataset import OCRDataset, collate_fn, NUM_CLASSES, decode_prediction
 
 # ── Konfiguracija ─────────────────────────────────────────────────────────────
 CONFIG = {
-    "train_csv":    ROOT / "splits" / "train.csv",
+    "train_csv":    ROOT / "splits" / "train_combined.csv",
     "val_csv":      ROOT / "splits" / "val.csv",
     "test_csv":     ROOT / "splits" / "test.csv",
     "base_dir":     ROOT,
@@ -52,9 +52,9 @@ CONFIG["output_dir"].mkdir(exist_ok=True, parents=True)
 USE_DRIVE_BACKUP = Path("/content/drive/MyDrive").exists()
 if USE_DRIVE_BACKUP:
     CONFIG["drive_backup_dir"].mkdir(exist_ok=True, parents=True)
-    print(f"📁 Drive backup AKTIVAN: {CONFIG['drive_backup_dir']}")
+    print(f"Drive backup AKTIVAN: {CONFIG['drive_backup_dir']}")
 else:
-    print(f"📁 Drive backup nedostupan (radi se lokalno)")
+    print(f"Drive backup nedostupan (radi se lokalno)")
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Uređaj: {device}")
@@ -215,7 +215,7 @@ def train():
               f"Val: {val_loss:.4f} | CER: {val_cer:.4f} | "
               f"LR: {lr_now:.6f} | {time.time()-t0:.1f}s")
 
-        # ⭐ Primeri predikcija u svakoj epohi
+        # Primeri predikcija u svakoj epohi
         print(f"  ── Primeri (epoha {epoch}) ──")
         for tacno, pred, c in val_examples:
             print(f"    Tačno : {tacno}")
@@ -274,13 +274,13 @@ def train():
     for tacno, pred, c in examples[-5:]:
         print(f"  Tačno: {tacno}\n  Predv: {pred}\n  CER: {c:.3f}\n")
 
-    # ⭐ POPRAVLJENO: history sa float konverzijom
+    # POPRAVLJENO: history sa float konverzijom
     history_path = CONFIG["output_dir"] / "history.json"
     with open(history_path, "w") as f:
         json.dump(history, f, indent=2)
     save_to_drive(history_path, "history.json")
 
-    print(f"\n✅ Trening završen!")
+    print(f"\nTrening završen!")
     print(f"   Lokalno: {CONFIG['output_dir']}/best_ocr_model.pt")
     if USE_DRIVE_BACKUP:
         print(f"   Drive:   {CONFIG['drive_backup_dir']}/best_ocr_model.pt")

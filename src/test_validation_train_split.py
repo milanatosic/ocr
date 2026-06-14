@@ -1,7 +1,3 @@
-"""
-Podela dataseta na train/val/test PO RAČUNU (racun_id).
-"""
-
 import pandas as pd
 import random
 from pathlib import Path
@@ -81,7 +77,7 @@ def main():
     print(f"  TRAIN: {len(train_df):5d} ({100*len(train_df)/len(df):.1f}%)")
     print(f"  VAL:   {len(val_df):5d} ({100*len(val_df)/len(df):.1f}%)")
     print(f"  TEST:  {len(test_df):5d} ({100*len(test_df)/len(df):.1f}%)")
-    print(f"\n✅ Sačuvano u {OUTPUT_DIR}/")
+    print(f"\nSačuvano u {OUTPUT_DIR}/")
 
 
 if __name__ == "__main__":
