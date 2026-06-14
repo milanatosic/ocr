@@ -11,8 +11,8 @@ ROOT = Path(__file__).resolve().parent.parent
 CONFIG = {
     "output_dir":           ROOT / "synthetic",
     "output_csv":           ROOT / "synthetic" / "synthetic_dataset.csv",
-    "num_samples_cyr":      1000,
-    "num_samples_cyr_short": 800,  # kratke ćirilične reči iz tabela
+    "num_samples_cyr":      500,
+    "num_samples_cyr_short": 1000,  # kratke ćirilične reči iz tabela
     "num_samples_lat":      300,
     "img_height":           48,
 }
