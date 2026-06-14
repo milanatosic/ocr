@@ -28,16 +28,16 @@ CONFIG = {
     "drive_backup_dir": Path("/content/drive/MyDrive/ocr_checkpoints"),
 
     "img_height":    48,
-    "hidden_size":   128,         # ⬇ manji model (bilo 256)
+    "hidden_size":   256,         
     "num_lstm_layers": 2,
 
     "batch_size":    32,
-    "num_epochs":    200,          # ⬆ više epoha (bilo 100)
-    "learning_rate": 5e-4,         # ⬆ veći LR (bilo 3e-4)
-    "weight_decay":  1e-4,         # ⬇ manje regularizacije
+    "num_epochs":    200,          # više epoha (bilo 100)
+    "learning_rate": 3e-4,         # smanjen LR
+    "weight_decay":  5e-4,         # povecana regularizacija
     "grad_clip":     5.0,
     "min_height":    15,
-    "patience":      25,           # ⬆ više strpljenja (bilo 15)
+    "patience":      15,           # manji patience
     "save_every":    10,
     "use_amp":       True,
 }
