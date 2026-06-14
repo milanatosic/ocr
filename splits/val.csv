@@ -5,14 +5,6 @@ output_rows/grejanje1_racun_za_grejanje_r2.jpg,"Popust isključenje 90.00% 7,189
 output_rows/grejanje1_racun_za_grejanje_r3.jpg,Kamata 33.78,grejanje1
 output_rows/grejanje1_racun_za_grejanje_r4.jpg,Ukupna naknada 798.82,grejanje1
 output_rows/grejanje1_racun_za_grejanje_r5.jpg,PDV 79.88,grejanje1
-output_rows/grejanje10_racun_za_grejanje_r0.jpg,Naziv i vrsta usluge Datum Količina JM Cena Iznos,grejanje10
-output_rows/grejanje10_racun_za_grejanje_r1.jpg,"Naknada po osnovu toplotne dobiti 30.09.2024 53.00 m2 85.000 100.00% 4,505.00",grejanje10
-output_rows/grejanje10_racun_za_grejanje_r2.jpg,Fiksni deo 348.32,grejanje10
-output_rows/grejanje10_racun_za_grejanje_r3.jpg,"Popust isključenje 90.00% 4,054.50",grejanje10
-output_rows/grejanje10_racun_za_grejanje_r4.jpg,Kamata 6.93,grejanje10
-output_rows/grejanje10_racun_za_grejanje_r5.jpg,Ukupna naknada: 798.82,grejanje10
-output_rows/grejanje10_racun_za_grejanje_r6.jpg,PDV: 79.88,grejanje10
-output_rows/grejanje10_racun_za_grejanje_r7.jpg,Ukupno za račun: 885.63,grejanje10
 output_rows/jotel2_jotel_uplatnica_r0.jpg,Шифра Валута Износ Извештај о уплати,jotel2
 output_rows/jotel2_jotel_uplatnica_r1.jpg,"189 Дин 3,160.00",jotel2
 output_rows/jotel2_jotel_uplatnica_r2.jpg,Рачун,jotel2
@@ -21,13 +13,6 @@ output_rows/jotel2_jotel_uplatnica_r4.jpg,Модел Позив на број,jo
 output_rows/jotel2_jotel_uplatnica_r5.jpg,09806000310250108,jotel2
 output_rows/jotel2_jotel_r6.jpg,Р.бр Услуга Период Статус безПДВ Попуст Нето ПДВ%,jotel2
 output_rows/jotel2_jotel_r7.jpg,"1. Оптик 1с 10.25 Активан 2,633.33 0 2,633.33 20",jotel2
-output_rows/mts9_mts_r0.jpg,Usluga Iznos Popust Osnovica StopaPDV,mts9
-output_rows/mts9_mts_r1.jpg,"1.Naknada 549,17 549,17 20%",mts9
-output_rows/mts9_mts_r2.jpg,"2.Ostale usluge i naknade 74,75 74,75 20%",mts9
-output_rows/mts9_mts_uplatnica_r3.jpg,01.01.2026.-31.01.2026.,mts9
-output_rows/mts9_mts_uplatnica_r4.jpg,"=748,70 Din.",mts9
-output_rows/mts9_mts_uplatnica_r5.jpg,97 26-292-011-3698913,mts9
-output_rows/mts9_mts_iznos_r6.jpg,"UKUPNO ZA PLAĆANJE: 748,70",mts9
 output_rows/mts11_mts_r0.jpg,"1.Naknada 1.749,17 1.132,83 616,34 20% 123,27",mts11
 output_rows/mts11_mts_r1.jpg,Usluga Iznos Popust Osnovica StopaPDV  PDV,mts11
 output_rows/mts11_mts_uplatnica_r2.jpg,01.03.2026.-31.03.2026.,mts11
@@ -48,19 +33,6 @@ output_rows/uplatnica23_uplatnica_r10.jpg,Model i poyiv na broj(odobrenje),uplat
 output_rows/uplatnica23_uplatnica_r11.jpg,97,uplatnica23
 output_rows/uplatnica23_uplatnica_r12.jpg,832230904972800070,uplatnica23
 output_rows/uplatnica23_uplatnica_r13.jpg,Hitno,uplatnica23
-output_rows/uplatnica16_uplatnica_r0.jpg,Šifra,uplatnica16
-output_rows/uplatnica16_uplatnica_r1.jpg,plaćanja,uplatnica16
-output_rows/uplatnica16_uplatnica_r2.jpg,153,uplatnica16
-output_rows/uplatnica16_uplatnica_r3.jpg,Valuta,uplatnica16
-output_rows/uplatnica16_uplatnica_r4.jpg,941,uplatnica16
-output_rows/uplatnica16_uplatnica_r5.jpg,Iznos,uplatnica16
-output_rows/uplatnica16_uplatnica_r6.jpg,NALOG ZA UPLATU,uplatnica16
-output_rows/uplatnica16_uplatnica_r7.jpg,"5,000.00",uplatnica16
-output_rows/uplatnica16_uplatnica_r8.jpg,Račun primaoca,uplatnica16
-output_rows/uplatnica16_uplatnica_r9.jpg,84000007312184357,uplatnica16
-output_rows/uplatnica16_uplatnica_r10.jpg,Model i poziv na broj (odobrenje),uplatnica16
-output_rows/uplatnica16_uplatnica_r11.jpg,97,uplatnica16
-output_rows/uplatnica16_uplatnica_r12.jpg,832230904972800070,uplatnica16
 output_rows/uplatnica17_uplatnica_r0.jpg,Šifra,uplatnica17
 output_rows/uplatnica17_uplatnica_r1.jpg,plaćanja,uplatnica17
 output_rows/uplatnica17_uplatnica_r2.jpg,Valuta,uplatnica17
@@ -87,14 +59,6 @@ output_rows/odrzavanje_zgrade12_stambene_usluge_nis_r10.jpg,74,odrzavanje_zgrade
 output_rows/odrzavanje_zgrade12_stambene_usluge_nis_r11.jpg,10.05.2025,odrzavanje_zgrade12
 output_rows/odrzavanje_zgrade12_stambene_usluge_nis_r12.jpg,10.06.2025,odrzavanje_zgrade12
 output_rows/odrzavanje_zgrade12_stambene_usluge_nis_r13.jpg,131.41,odrzavanje_zgrade12
-output_rows/odrzavanje_zgrade15_stambena_zajednica_iznos_r0.jpg,"Vaše dugovanje sa ovim računom iznosi: 1.755,54 RSD",odrzavanje_zgrade15
-output_rows/odrzavanje_zgrade15_stambena_zajednica_r1.jpg,Šifra Naziv artikla kod JM KOL PDV Rabat,odrzavanje_zgrade15
-output_rows/odrzavanje_zgrade15_stambena_zajednica_r2.jpg,Bar Cene bez %,odrzavanje_zgrade15
-output_rows/odrzavanje_zgrade15_stambena_zajednica_r3.jpg,"000019 TEKUĆE ODRŽAVANJE MES 1,000 571,91 0,00",odrzavanje_zgrade15
-output_rows/odrzavanje_zgrade15_stambena_zajednica_r4.jpg,"000020 INVESTICIONO ODRŽAVANJE M2 53,000 12,39 0,00",odrzavanje_zgrade15
-output_rows/odrzavanje_zgrade15_stambena_zajednica_r5.jpg,"000021 NAKNADA ZA RAD PROFESIONALNOG MES 1,000 410,60 0,00",odrzavanje_zgrade15
-output_rows/odrzavanje_zgrade15_stambena_zajednica_r6.jpg,UPRAVNIK,odrzavanje_zgrade15
-output_rows/odrzavanje_zgrade15_stambena_zajednica_r7.jpg,"000024 PREMIJA OSIGURANJA MES 1,000 116,82 0,00",odrzavanje_zgrade15
 output_rows/struja74_racun_za_grejanje_r0.jpg,Naziv i vrsta usluge Datum Količina JM Iznos,struja74
 output_rows/struja74_racun_za_grejanje_r1.jpg,"Naknada po osnovu toplotne dobiti 31.10.2025 53.00 m2 85.000 4.505,00",struja74
 output_rows/struja74_racun_za_grejanje_r2.jpg,Fiksni deo 31.10.2025 53.00 m2 5.572 348.22,struja74

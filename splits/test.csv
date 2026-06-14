@@ -1,4 +1,12 @@
 image_path,label,racun_id
+output_rows/grejanje10_racun_za_grejanje_r0.jpg,Naziv i vrsta usluge Datum Količina JM Cena Iznos,grejanje10
+output_rows/grejanje10_racun_za_grejanje_r1.jpg,"Naknada po osnovu toplotne dobiti 30.09.2024 53.00 m2 85.000 100.00% 4,505.00",grejanje10
+output_rows/grejanje10_racun_za_grejanje_r2.jpg,Fiksni deo 348.32,grejanje10
+output_rows/grejanje10_racun_za_grejanje_r3.jpg,"Popust isključenje 90.00% 4,054.50",grejanje10
+output_rows/grejanje10_racun_za_grejanje_r4.jpg,Kamata 6.93,grejanje10
+output_rows/grejanje10_racun_za_grejanje_r5.jpg,Ukupna naknada: 798.82,grejanje10
+output_rows/grejanje10_racun_za_grejanje_r6.jpg,PDV: 79.88,grejanje10
+output_rows/grejanje10_racun_za_grejanje_r7.jpg,Ukupno za račun: 885.63,grejanje10
 output_rows/grejanje6_racun_za_smece_r0.jpg,Naziv i vrsta Datum Količina JM Cena Iznos,grejanje6
 output_rows/grejanje6_racun_za_smece_r1.jpg,"Naknada po osnovu toplotne dobiti 31.01.2022 53.00 m2 104.1000 100.00% 5,517.32",grejanje6
 output_rows/grejanje6_racun_za_smece_r2.jpg,"Popust isključenje  90.00% 4,966.57",grejanje6
@@ -12,6 +20,13 @@ output_rows/jotel3_jotel_uplatnica_r11.jpg,Модел Позив на број,j
 output_rows/jotel3_jotel_uplatnica_r12.jpg,09806000301260108,jotel3
 output_rows/jotel3_jotel_r0.jpg,Р.бр Услуга Период Статус безПДВ Попуст Нето ПДВ%,jotel3
 output_rows/jotel3_jotel_r1.jpg,1. Оптик 1с 1.26 Активан 0.83 0 0.83 20,jotel3
+output_rows/mts9_mts_r0.jpg,Usluga Iznos Popust Osnovica StopaPDV,mts9
+output_rows/mts9_mts_r1.jpg,"1.Naknada 549,17 549,17 20%",mts9
+output_rows/mts9_mts_r2.jpg,"2.Ostale usluge i naknade 74,75 74,75 20%",mts9
+output_rows/mts9_mts_uplatnica_r3.jpg,01.01.2026.-31.01.2026.,mts9
+output_rows/mts9_mts_uplatnica_r4.jpg,"=748,70 Din.",mts9
+output_rows/mts9_mts_uplatnica_r5.jpg,97 26-292-011-3698913,mts9
+output_rows/mts9_mts_iznos_r6.jpg,"UKUPNO ZA PLAĆANJE: 748,70",mts9
 output_rows/mts10_mts_r3.jpg,Usluga Iznos Popust Osnovica StopaPDV  PDV,mts10
 output_rows/mts10_mts_r4.jpg,"1.Naknada 915,83 632,83 283,00 20% 56,00",mts10
 output_rows/mts10_mts_uplatnica_r5.jpg,01.02.2026.-28.02.2026.,mts10
@@ -32,6 +47,19 @@ output_rows/uplatnica14_uplatnica_r10.jpg,97,uplatnica14
 output_rows/uplatnica14_uplatnica_r11.jpg,832230904972800070,uplatnica14
 output_rows/uplatnica14_svrha_uplate_r12.jpg,POREZ NA IMOVINU,uplatnica14
 output_rows/uplatnica14_svrha_uplate_r13.jpg,сврха уплате,uplatnica14
+output_rows/uplatnica16_uplatnica_r0.jpg,Šifra,uplatnica16
+output_rows/uplatnica16_uplatnica_r1.jpg,plaćanja,uplatnica16
+output_rows/uplatnica16_uplatnica_r2.jpg,153,uplatnica16
+output_rows/uplatnica16_uplatnica_r3.jpg,Valuta,uplatnica16
+output_rows/uplatnica16_uplatnica_r4.jpg,941,uplatnica16
+output_rows/uplatnica16_uplatnica_r5.jpg,Iznos,uplatnica16
+output_rows/uplatnica16_uplatnica_r6.jpg,NALOG ZA UPLATU,uplatnica16
+output_rows/uplatnica16_uplatnica_r7.jpg,"5,000.00",uplatnica16
+output_rows/uplatnica16_uplatnica_r8.jpg,Račun primaoca,uplatnica16
+output_rows/uplatnica16_uplatnica_r9.jpg,84000007312184357,uplatnica16
+output_rows/uplatnica16_uplatnica_r10.jpg,Model i poziv na broj (odobrenje),uplatnica16
+output_rows/uplatnica16_uplatnica_r11.jpg,97,uplatnica16
+output_rows/uplatnica16_uplatnica_r12.jpg,832230904972800070,uplatnica16
 output_rows/uplatnica19_uplatnica_r0.jpg,Šifra,uplatnica19
 output_rows/uplatnica19_uplatnica_r1.jpg,plaćanja,uplatnica19
 output_rows/uplatnica19_uplatnica_r2.jpg,189,uplatnica19
@@ -95,11 +123,14 @@ output_rows/mts2_mts_uplatnica_r2.jpg,01.02.2026.-28.02.2026.,mts2
 output_rows/mts2_mts_uplatnica_r3.jpg,"=339,60 Din.",mts2
 output_rows/mts2_mts_uplatnica_r4.jpg,97 45-293-066-3170328,mts2
 output_rows/mts2_mts_iznos_r5.jpg,"UKUPNO ZA PLAĆANJE: 339,60",mts2
-output_rows/struja6_racun_za_struju_r0.jpg,ПОТРОШЊА У ОБРАЧУНСКОМ ПЕРИОДУ 50kWh,struja6
-output_rows/struja6_racun_za_struju_r1.jpg,"A УКУПНО ЗАДУЖЕЊЕ ЗА ОБРАЧУНСКИ ПЕРИОД 1.656,03 дин",struja6
-output_rows/struja6_racun_za_struju_r2.jpg,"Б ПРЕТПЛАТА ЗА ПРЕТХОДНИ ОБРАЧУНСКИ ПЕРИОД -5.089,09",struja6
-output_rows/struja6_racun_za_struju_r3.jpg,"В ПРЕТПЛАТА ЗА ЕЛЕКТРИЧНУ ЕНЕРГИЈУ (А+Б) -3.433,06 дин",struja6
-output_rows/struja6_racun_za_struju_r4.jpg,Рок за плаћање: 28.04.2026.,struja6
+output_rows/odrzavanje_zgrade15_stambena_zajednica_iznos_r0.jpg,"Vaše dugovanje sa ovim računom iznosi: 1.755,54 RSD",odrzavanje_zgrade15
+output_rows/odrzavanje_zgrade15_stambena_zajednica_r1.jpg,Šifra Naziv artikla kod JM KOL PDV Rabat,odrzavanje_zgrade15
+output_rows/odrzavanje_zgrade15_stambena_zajednica_r2.jpg,Bar Cene bez %,odrzavanje_zgrade15
+output_rows/odrzavanje_zgrade15_stambena_zajednica_r3.jpg,"000019 TEKUĆE ODRŽAVANJE MES 1,000 571,91 0,00",odrzavanje_zgrade15
+output_rows/odrzavanje_zgrade15_stambena_zajednica_r4.jpg,"000020 INVESTICIONO ODRŽAVANJE M2 53,000 12,39 0,00",odrzavanje_zgrade15
+output_rows/odrzavanje_zgrade15_stambena_zajednica_r5.jpg,"000021 NAKNADA ZA RAD PROFESIONALNOG MES 1,000 410,60 0,00",odrzavanje_zgrade15
+output_rows/odrzavanje_zgrade15_stambena_zajednica_r6.jpg,UPRAVNIK,odrzavanje_zgrade15
+output_rows/odrzavanje_zgrade15_stambena_zajednica_r7.jpg,"000024 PREMIJA OSIGURANJA MES 1,000 116,82 0,00",odrzavanje_zgrade15
 output_rows/odrzavanje_zgrade18_stambena_zajednica_r0.jpg,Bar Cene bez % Iznos,odrzavanje_zgrade18
 output_rows/odrzavanje_zgrade18_stambena_zajednica_r1.jpg,Šifra Naziv artikla kod JM KOL PDV Rabat PDV PDV,odrzavanje_zgrade18
 output_rows/odrzavanje_zgrade18_stambena_zajednica_r2.jpg,"000019 TEKUĆE ODRŽAVANJE MES 1,000 661,00 0,00 0% 0,00",odrzavanje_zgrade18

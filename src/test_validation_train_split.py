@@ -7,7 +7,7 @@ CSV_PATH = ROOT / "dataset.csv"
 OUTPUT_DIR = ROOT / "splits"
 SEED = 42
 TRAIN_RATIO = 0.80
-VAL_RATIO = 0.15
+VAL_RATIO = 0.10
 
 random.seed(SEED)
 
@@ -16,7 +16,7 @@ CYRILLIC_GROUPS = {"struja", "jotel"}
 
 # Koliko računa iz ćiriličnih grupa forsiraj u val/test
 FORCED_CYR_VAL = {"struja": 8, "jotel": 1}
-FORCED_CYR_TEST = {"struja": 4, "jotel": 1}
+FORCED_CYR_TEST = {"struja": 3, "jotel": 1}
 
 
 def get_group(racun_id):

@@ -597,6 +597,11 @@ output_rows/struja60_racun_za_struju_r15.jpg,Плава зона,struja60
 output_rows/struja60_racun_za_struju_r16.jpg,Црвена зона,struja60
 output_rows/struja60_racun_za_struju_r17.jpg,"Остварена просечна цена електричне енергије (дин/kWh): 8,73",struja60
 output_rows/struja60_racun_za_struju_r18.jpg,"4 ЗАДУЖЕЊЕ ЗА ЕЛЕКТРИЧНУ ЕНЕРГИЈУ У ОБРАЧУНСКОМ ПЕРИОДУ(1+2+3) 2.373,78",struja60
+output_rows/struja6_racun_za_struju_r0.jpg,ПОТРОШЊА У ОБРАЧУНСКОМ ПЕРИОДУ 50kWh,struja6
+output_rows/struja6_racun_za_struju_r1.jpg,"A УКУПНО ЗАДУЖЕЊЕ ЗА ОБРАЧУНСКИ ПЕРИОД 1.656,03 дин",struja6
+output_rows/struja6_racun_za_struju_r2.jpg,"Б ПРЕТПЛАТА ЗА ПРЕТХОДНИ ОБРАЧУНСКИ ПЕРИОД -5.089,09",struja6
+output_rows/struja6_racun_za_struju_r3.jpg,"В ПРЕТПЛАТА ЗА ЕЛЕКТРИЧНУ ЕНЕРГИЈУ (А+Б) -3.433,06 дин",struja6
+output_rows/struja6_racun_za_struju_r4.jpg,Рок за плаћање: 28.04.2026.,struja6
 output_rows/struja58_racun_za_struju_r0.jpg,ОБРАЧУН ЗА ЕЛЕКТРИЧНУ ЕНЕРГИЈУ,struja58
 output_rows/struja58_racun_za_struju_r1.jpg,ТАРИФА,struja58
 output_rows/struja58_racun_za_struju_r2.jpg,Утрошено Цена по Износ,struja58
