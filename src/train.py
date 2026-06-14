@@ -1,8 +1,3 @@
-"""
-Trening CRNN OCR modela.
-Putanje su portabilne (automatski detektuje root).
-"""
-
 import torch
 import torch.nn as nn
 import torch.optim as optim

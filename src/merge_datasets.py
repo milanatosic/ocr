@@ -13,7 +13,7 @@ CONFIG = {
 def main():
     df_orig = pd.read_csv(CONFIG["original_train"])
     df_synth = pd.read_csv(CONFIG["synthetic_csv"])
-    
+
     # Spoji
     df_combined = pd.concat([df_orig, df_synth], ignore_index=True)
     df_combined.to_csv(CONFIG["output_csv"], index=False)
