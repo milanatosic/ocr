@@ -5,6 +5,26 @@ output_rows/grejanje1_racun_za_grejanje_r2.jpg,"Popust isključenje 90.00% 7,189
 output_rows/grejanje1_racun_za_grejanje_r3.jpg,Kamata 33.78,grejanje1
 output_rows/grejanje1_racun_za_grejanje_r4.jpg,Ukupna naknada 798.82,grejanje1
 output_rows/grejanje1_racun_za_grejanje_r5.jpg,PDV 79.88,grejanje1
+output_rows/grejanje13_racun_za_grejanje_r0.jpg,Naziv i vrsta usluge Datum Količina JM Cena Iznos,grejanje13
+output_rows/grejanje13_racun_za_grejanje_r1.jpg,"Naknada po osnovu toplotne dobiti 31.01.2026 53.00 m2 85.000 4,505.00",grejanje13
+output_rows/grejanje13_racun_za_grejanje_r2.jpg,Fiksni deo 31.01.2026 53.00 m2 6.572 348.32,grejanje13
+output_rows/grejanje13_racun_za_grejanje_r3.jpg,"Popust isključenje 53.00 m2 76.500 90.00% 4,054.50",grejanje13
+output_rows/grejanje13_racun_za_grejanje_r4.jpg,Ukupna naknada: 798.82,grejanje13
+output_rows/grejanje13_racun_za_grejanje_r5.jpg,PDV: 79.88,grejanje13
+output_rows/uplatnica9_svrha_uplate_r0.jpg,Порез на имовину од физичких лица,uplatnica9
+output_rows/uplatnica9_svrha_uplate_r1.jpg,сврха уплате,uplatnica9
+output_rows/uplatnica9_uplatnica_r2.jpg,шифра,uplatnica9
+output_rows/uplatnica9_uplatnica_r3.jpg,плаћања,uplatnica9
+output_rows/uplatnica9_uplatnica_r4.jpg,153,uplatnica9
+output_rows/uplatnica9_uplatnica_r5.jpg,валута,uplatnica9
+output_rows/uplatnica9_uplatnica_r6.jpg,RSD,uplatnica9
+output_rows/uplatnica9_uplatnica_r7.jpg,износ,uplatnica9
+output_rows/uplatnica9_uplatnica_r8.jpg,- 440.00,uplatnica9
+output_rows/uplatnica9_uplatnica_r9.jpg,рачун примаоца,uplatnica9
+output_rows/uplatnica9_uplatnica_r10.jpg,840-0000713121843-57,uplatnica9
+output_rows/uplatnica9_uplatnica_r11.jpg,модел и позив на број(одобрење),uplatnica9
+output_rows/uplatnica9_uplatnica_r12.jpg,97,uplatnica9
+output_rows/uplatnica9_uplatnica_r13.jpg,542333012976108255,uplatnica9
 output_rows/jotel2_jotel_uplatnica_r0.jpg,Шифра Валута Износ Извештај о уплати,jotel2
 output_rows/jotel2_jotel_uplatnica_r1.jpg,"189 Дин 3,160.00",jotel2
 output_rows/jotel2_jotel_uplatnica_r2.jpg,Рачун,jotel2
@@ -13,6 +33,12 @@ output_rows/jotel2_jotel_uplatnica_r4.jpg,Модел Позив на број,jo
 output_rows/jotel2_jotel_uplatnica_r5.jpg,09806000310250108,jotel2
 output_rows/jotel2_jotel_r6.jpg,Р.бр Услуга Период Статус безПДВ Попуст Нето ПДВ%,jotel2
 output_rows/jotel2_jotel_r7.jpg,"1. Оптик 1с 10.25 Активан 2,633.33 0 2,633.33 20",jotel2
+output_rows/mts6_mts_r0.jpg,Usluga Iznos Popust Osnovica StopaPDV  PDV,mts6
+output_rows/mts6_mts_r1.jpg,"1.Naknada 915,83 632,83 283,00 20% 56,00",mts6
+output_rows/mts6_mts_iznos_r2.jpg,"UKUPNO ZA PLAĆANJE: 339,60",mts6
+output_rows/mts6_mts_uplatnica_r3.jpg,01.03.2026.-31.03.2026.,mts6
+output_rows/mts6_mts_uplatnica_r4.jpg,"=339,60 Din.",mts6
+output_rows/mts6_mts_uplatnica_r5.jpg,97 79-294-066-1458541,mts6
 output_rows/mts11_mts_r0.jpg,"1.Naknada 1.749,17 1.132,83 616,34 20% 123,27",mts11
 output_rows/mts11_mts_r1.jpg,Usluga Iznos Popust Osnovica StopaPDV  PDV,mts11
 output_rows/mts11_mts_uplatnica_r2.jpg,01.03.2026.-31.03.2026.,mts11
@@ -59,6 +85,11 @@ output_rows/odrzavanje_zgrade12_stambene_usluge_nis_r10.jpg,74,odrzavanje_zgrade
 output_rows/odrzavanje_zgrade12_stambene_usluge_nis_r11.jpg,10.05.2025,odrzavanje_zgrade12
 output_rows/odrzavanje_zgrade12_stambene_usluge_nis_r12.jpg,10.06.2025,odrzavanje_zgrade12
 output_rows/odrzavanje_zgrade12_stambene_usluge_nis_r13.jpg,131.41,odrzavanje_zgrade12
+output_rows/odrzavanje_zgrade14_svrha_uplate_r0.jpg,Укупно кубика за наплату:127.78,odrzavanje_zgrade14
+output_rows/odrzavanje_zgrade14_svrha_uplate_r1.jpg,корисник има и други водомер,odrzavanje_zgrade14
+output_rows/odrzavanje_zgrade14_svrha_uplate_r2.jpg,Адреса објеката:,odrzavanje_zgrade14
+output_rows/odrzavanje_zgrade14_svrha_uplate_r3.jpg,ЂОРЂА СТАМЕНКОВИЋА,odrzavanje_zgrade14
+output_rows/odrzavanje_zgrade14_svrha_uplate_r4.jpg,бр.035 ул.00 ст.005 мз.019,odrzavanje_zgrade14
 output_rows/struja74_racun_za_grejanje_r0.jpg,Naziv i vrsta usluge Datum Količina JM Iznos,struja74
 output_rows/struja74_racun_za_grejanje_r1.jpg,"Naknada po osnovu toplotne dobiti 31.10.2025 53.00 m2 85.000 4.505,00",struja74
 output_rows/struja74_racun_za_grejanje_r2.jpg,Fiksni deo 31.10.2025 53.00 m2 5.572 348.22,struja74

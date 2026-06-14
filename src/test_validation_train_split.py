@@ -6,8 +6,8 @@ ROOT = Path(__file__).resolve().parent.parent
 CSV_PATH = ROOT / "dataset.csv"
 OUTPUT_DIR = ROOT / "splits"
 SEED = 42
-TRAIN_RATIO = 0.80
-VAL_RATIO = 0.10
+TRAIN_RATIO = 0.75
+VAL_RATIO = 0.15
 
 random.seed(SEED)
 
@@ -16,7 +16,7 @@ CYRILLIC_GROUPS = {"struja", "jotel"}
 
 # Koliko računa iz ćiriličnih grupa forsiraj u val/test
 FORCED_CYR_VAL = {"struja": 8, "jotel": 1}
-FORCED_CYR_TEST = {"struja": 3, "jotel": 1}
+FORCED_CYR_TEST = {"struja": 7, "jotel": 1}
 
 
 def get_group(racun_id):
@@ -96,6 +96,35 @@ def main():
     print(f"    → ćirilični: {len(test_cyr):3d} ({100*len(test_cyr)/len(test_df):.1f}%)")
     print(f"\nSačuvano u {OUTPUT_DIR}/")
 
+    df = pd.read_csv("splits/train.csv")
+    df['has_cyr'] = df['label'].apply(lambda x: any('\u0400' <= c <= '\u04FF' for c in str(x)))
+    print(df['has_cyr'].value_counts())
+
+    df = pd.read_csv("splits/train.csv")
+    df['has_cyr'] = df['label'].apply(lambda x: any('\u0400' <= c <= '\u04FF' for c in str(x)))
+    df['duzina'] = df['label'].apply(lambda x: len(str(x)))
+    df['grupa'] = df['racun_id'].apply(lambda x: ''.join(c for c in str(x) if not c.isdigit()))
+
+    print("Ćirilični cropovi po grupi:")
+    cyr_df = df[df['has_cyr']]
+    print(cyr_df.groupby('grupa').agg(
+        broj=('label', 'count'),
+        avg_duzina=('duzina', 'mean'),
+        max_duzina=('duzina', 'max')
+    ))
+
+    print("\nPrimeri ćiriličnih labela (kratke, duzina <= 6):")
+    kratke = cyr_df[cyr_df['duzina'] <= 6]['label'].unique()
+    print(list(kratke[:20]))
+
+    print("Raspodela dužina ćiriličnih cropova u struja grupi:")
+    struja_cyr = df[(df['has_cyr']) & (df['grupa'] == 'struja')]
+    bins = [0, 5, 10, 20, 40, 80]
+    print(pd.cut(struja_cyr['duzina'], bins=bins).value_counts().sort_index())
+
+    print("\nPrimeri kratkih struja labela (duzina <= 10):")
+    kratke_struja = struja_cyr[struja_cyr['duzina'] <= 10]['label'].unique()
+    print(list(kratke_struja))
 
 if __name__ == "__main__":
     main()
