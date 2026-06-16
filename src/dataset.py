@@ -13,8 +13,8 @@ CHARS = (
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     "abcdefghijklmnopqrstuvwxyz"
     "ČčĆćŠšŽžĐđ"
-    "БВГДЂЖЗИЛЉНЊПРСЋУФХЦЧЏШ"
-    "бвгдђжзиклљмњпрстћуфхцчџш"
+    "АБВГДЂЕЖЗИЈКЛЉМНЊОПРСЋТУФХЦЧЏШ"
+    "абвгдђежзијклљмнњопрстћуфхцчџш"
 )
 BLANK = 0
 CHAR_TO_IDX = {c: i + 1 for i, c in enumerate(CHARS)}
