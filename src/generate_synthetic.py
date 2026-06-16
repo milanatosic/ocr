@@ -139,6 +139,13 @@ TEMPLATES_NUMBERS_BALANCED = [
     "49.99", "87", "64", "96", "74",
     "467,89", "987,44", "746,00", "849,17",
     "4.796,87", "6.748,99", "9.467,00",
+    # kW/kWh formati
+    "174 kWh", "500 kW", "1.500 kWh", "3,5 kWh",
+    "(kW/kWh)", "(kWh)", "(kW)", "kW/kWh",
+    "247 kWh", "89 kW", "1.200 kWh", "450 kW",
+    # Sa zagradama
+    "(100,00)", "(bez PDV)", "(sa PDV)", "(din)",
+    "(dinara)", "(RSD)", "(ukupno)", "(neto)",
 ]
 
 TEMPLATES_LAT = [
@@ -153,6 +160,10 @@ TEMPLATES_LAT = [
     "Telefonska usluga", "Porez na imovinu", "Komunalna taksa",
     "Ukupno za račun", "Iznos bez PDV", "Stopa PDV", "Osnovica",
     "Fiksni deo", "Varijabilni deo", "Tarifa",
+    # kW/kWh u kontekstu
+    "Snaga (kW)", "Energija (kWh)", "Potrošnja (kWh)",
+    "Obračunska snaga (kW)", "Aktivna energija (kWh)",
+    "Reaktivna energija (kWh)", "Vršna snaga (kW)",
 ]
 
 
