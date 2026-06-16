@@ -42,7 +42,7 @@ class CRNN(nn.Module):
 
         cnn_h = img_height // 16
         self.fc = nn.Linear(256 * cnn_h, hidden_size)
-        self.dropout = nn.Dropout(0.6)
+        self.dropout = nn.Dropout(0.4)
 
         self.lstm = nn.LSTM(
             input_size=hidden_size,
