@@ -28,7 +28,7 @@ CONFIG = {
     "drive_backup_dir": Path("/content/drive/MyDrive/ocr_checkpoints"),
 
     "img_height":    48,
-    "hidden_size":   128,         
+    "hidden_size":   256,
     "num_lstm_layers": 2,
 
     "batch_size":    32,
