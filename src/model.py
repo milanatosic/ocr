@@ -11,7 +11,12 @@ class CRNN(nn.Module):
         super().__init__()
 
         self.cnn = nn.Sequential(
-            nn.Conv2d(1, 64, 3, 1, 1),
+            nn.Conv2d(1, 32, 3, 1, 1),
+            nn.BatchNorm2d(32),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(2, 2),
+
+            nn.Conv2d(32, 64, 3, 1, 1),
             nn.BatchNorm2d(64),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(2, 2),
@@ -19,7 +24,11 @@ class CRNN(nn.Module):
             nn.Conv2d(64, 128, 3, 1, 1),
             nn.BatchNorm2d(128),
             nn.ReLU(inplace=True),
-            nn.MaxPool2d(2, 2),
+
+            nn.Conv2d(128, 128, 3, 1, 1),
+            nn.BatchNorm2d(128),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d((2, 1), (2, 1)),
 
             nn.Conv2d(128, 256, 3, 1, 1),
             nn.BatchNorm2d(256),
@@ -29,27 +38,18 @@ class CRNN(nn.Module):
             nn.BatchNorm2d(256),
             nn.ReLU(inplace=True),
             nn.MaxPool2d((2, 1), (2, 1)),
-
-            nn.Conv2d(256, 512, 3, 1, 1),
-            nn.BatchNorm2d(512),
-            nn.ReLU(inplace=True),
-
-            nn.Conv2d(512, 512, 3, 1, 1),
-            nn.BatchNorm2d(512),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d((2, 1), (2, 1)),
         )
 
         cnn_h = img_height // 16
-        self.fc = nn.Linear(512 * cnn_h, hidden_size)
-        self.dropout = nn.Dropout(0.5)
+        self.fc = nn.Linear(256 * cnn_h, hidden_size)
+        self.dropout = nn.Dropout(0.6)
 
         self.lstm = nn.LSTM(
             input_size=hidden_size,
             hidden_size=hidden_size,
             num_layers=num_lstm_layers,
             bidirectional=True,
-            dropout=0.3 if num_lstm_layers > 1 else 0,
+            dropout=0.4 if num_lstm_layers > 1 else 0,
             batch_first=False
         )
 

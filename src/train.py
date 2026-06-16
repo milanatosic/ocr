@@ -28,7 +28,7 @@ CONFIG = {
     "drive_backup_dir": Path("/content/drive/MyDrive/ocr_checkpoints"),
 
     "img_height":    48,
-    "hidden_size":   256,         
+    "hidden_size":   128,         
     "num_lstm_layers": 2,
 
     "batch_size":    32,
@@ -156,8 +156,9 @@ def train():
     ctc_loss = nn.CTCLoss(blank=0, reduction='mean', zero_infinity=True)
     optimizer = optim.AdamW(model.parameters(), lr=CONFIG["learning_rate"],
                             weight_decay=CONFIG["weight_decay"])
-    scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min',
-                                                     factor=0.5, patience=5)
+    scheduler = optim.lr_scheduler.CosineAnnealingLR(
+        optimizer, T_max=CONFIG["num_epochs"], eta_min=1e-6
+    )
     scaler = GradScaler('cuda', enabled=CONFIG["use_amp"])
 
     best_val_loss = float('inf')
@@ -199,7 +200,7 @@ def train():
             model, val_loader, ctc_loss,
             return_examples=True, n_examples=3
         )
-        scheduler.step(val_loss)
+        scheduler.step()
 
         history["train_loss"].append(float(train_loss))
         history["val_loss"].append(float(val_loss))

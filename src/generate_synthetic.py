@@ -17,9 +17,9 @@ CONFIG = {
     "output_dir":            ROOT / "synthetic",
     "output_csv":            ROOT / "synthetic" / "synthetic_dataset.csv",
     "num_samples_cyr":       200,   # duge ćirilične rečenice (smanjeno)
-    "num_samples_cyr_short": 700,  # kratke ćirilične reči (povećano)
+    "num_samples_cyr_short": 400,  # kratke ćirilične reči (povećano)
     "num_samples_numbers":   300,   # samo brojevi i kratke numeričke kombinacije
-    "num_samples_lat":       200,   # latinica (smanjeno)
+    "num_samples_lat":       100,   # latinica (smanjeno)
     "img_height":            48,
 }
 
@@ -294,33 +294,62 @@ def render_text_image(text, font_path, font_size=32, style='normal'):
 
 def add_realistic_noise(img):
     img = img.astype(np.uint8)
+    h, w = img.shape[:2]
 
-    if random.random() < 0.3:
-        angle = random.uniform(-2, 2)
-        h, w = img.shape[:2]
+    # Rotacija
+    if random.random() < 0.4:
+        angle = random.uniform(-3, 3)
         M = cv2.getRotationMatrix2D((w / 2, h / 2), angle, 1.0)
         img = cv2.warpAffine(img, M, (w, h),
                              flags=cv2.INTER_LINEAR,
                              borderMode=cv2.BORDER_REPLICATE)
 
+    # Perspective transform — simulira kosi ugao skenera
     if random.random() < 0.4:
-        sigma = random.uniform(3, 10)
+        margin = int(min(h, w) * 0.06)
+        src = np.float32([[0, 0], [w, 0], [w, h], [0, h]])
+        dst = np.float32([
+            [random.randint(0, margin), random.randint(0, margin)],
+            [w - random.randint(0, margin), random.randint(0, margin)],
+            [w - random.randint(0, margin), h - random.randint(0, margin)],
+            [random.randint(0, margin), h - random.randint(0, margin)],
+        ])
+        M = cv2.getPerspectiveTransform(src, dst)
+        img = cv2.warpPerspective(img, M, (w, h), borderMode=cv2.BORDER_REPLICATE)
+
+    # Scanner shadow — jedna strana tamnija (čest artefakt skenera)
+    if random.random() < 0.35:
+        intensity = random.randint(15, 45)
+        if random.random() < 0.5:
+            grad = np.linspace(intensity, 0, w, dtype=np.float32)
+            shadow = np.tile(grad, (h, 1))
+        else:
+            grad = np.linspace(intensity, 0, h, dtype=np.float32)
+            shadow = np.tile(grad.reshape(-1, 1), (1, w))
+        img = np.clip(img.astype(np.float32) - shadow, 0, 255).astype(np.uint8)
+
+    # Šum
+    if random.random() < 0.5:
+        sigma = random.uniform(3, 12)
         noise = np.random.normal(0, sigma, img.shape)
         img = np.clip(img.astype(np.float32) + noise, 0, 255).astype(np.uint8)
 
-    if random.random() < 0.3:
+    # Blur
+    if random.random() < 0.35:
         k = random.choice([3, 5])
         img = cv2.GaussianBlur(img, (k, k), 0)
 
-    if random.random() < 0.2:
+    # Erozija/dilatacija — simulira loš printer ili blur mastila
+    if random.random() < 0.25:
         kernel = np.ones((2, 2), np.uint8)
         if random.random() < 0.5:
             img = cv2.erode(img, kernel, iterations=1)
         else:
             img = cv2.dilate(img, kernel, iterations=1)
 
-    if random.random() < 0.3:
-        q = random.randint(60, 95)
+    # JPEG kompresija — niži kvalitet nego pre
+    if random.random() < 0.35:
+        q = random.randint(45, 85)
         _, buf = cv2.imencode(".jpg", img, [int(cv2.IMWRITE_JPEG_QUALITY), q])
         decoded = cv2.imdecode(buf, cv2.IMREAD_GRAYSCALE)
         if decoded is not None:

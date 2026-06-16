@@ -100,33 +100,47 @@ def decode_prediction(log_probs, beam_width=1):
 
 
 def augment_image(img):
-    """Jača augmentacija za OCR."""
+    """Augmentacija tokom treninga na pravim slikama."""
+    h, w = img.shape[:2]
+
     # Rotacija
     if random.random() < 0.4:
         angle = random.uniform(-3, 3)
-        h, w = img.shape[:2]
         M = cv2.getRotationMatrix2D((w / 2, h / 2), angle, 1.0)
         img = cv2.warpAffine(img, M, (w, h), borderMode=cv2.BORDER_REPLICATE)
 
-    # Osvetljenje/kontrast
-    if random.random() < 0.5:
-        alpha = random.uniform(0.7, 1.3)
-        beta = random.uniform(-30, 30)
+    # Perspective transform — kosi ugao skenera
+    if random.random() < 0.35:
+        margin = int(min(h, w) * 0.05)
+        src = np.float32([[0, 0], [w, 0], [w, h], [0, h]])
+        dst = np.float32([
+            [random.randint(0, margin), random.randint(0, margin)],
+            [w - random.randint(0, margin), random.randint(0, margin)],
+            [w - random.randint(0, margin), h - random.randint(0, margin)],
+            [random.randint(0, margin), h - random.randint(0, margin)],
+        ])
+        M = cv2.getPerspectiveTransform(src, dst)
+        img = cv2.warpPerspective(img, M, (w, h), borderMode=cv2.BORDER_REPLICATE)
+
+    # Osvetljenje/kontrast — agresivnije
+    if random.random() < 0.55:
+        alpha = random.uniform(0.6, 1.4)
+        beta = random.uniform(-40, 40)
         img = np.clip(alpha * img.astype(np.float32) + beta, 0, 255).astype(np.uint8)
 
     # Blur
-    if random.random() < 0.25:
+    if random.random() < 0.3:
         k = random.choice([3, 5])
         img = cv2.GaussianBlur(img, (k, k), 0)
 
     # Šum
-    if random.random() < 0.3:
-        sigma = random.uniform(5, 15)
+    if random.random() < 0.4:
+        sigma = random.uniform(5, 18)
         noise = np.random.normal(0, sigma, img.shape).astype(np.float32)
         img = np.clip(img.astype(np.float32) + noise, 0, 255).astype(np.uint8)
 
     # Erozija/dilatacija
-    if random.random() < 0.2:
+    if random.random() < 0.25:
         kernel = np.ones((2, 2), np.uint8)
         if random.random() < 0.5:
             img = cv2.erode(img, kernel, iterations=1)
@@ -134,10 +148,12 @@ def augment_image(img):
             img = cv2.dilate(img, kernel, iterations=1)
 
     # JPEG kompresija
-    if random.random() < 0.2:
-        quality = random.randint(50, 85)
+    if random.random() < 0.25:
+        quality = random.randint(45, 85)
         _, buf = cv2.imencode('.jpg', img, [int(cv2.IMWRITE_JPEG_QUALITY), quality])
-        img = cv2.imdecode(buf, cv2.IMREAD_GRAYSCALE)
+        decoded = cv2.imdecode(buf, cv2.IMREAD_GRAYSCALE)
+        if decoded is not None:
+            img = decoded
 
     return img
 
