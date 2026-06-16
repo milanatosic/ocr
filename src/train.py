@@ -37,7 +37,7 @@ CONFIG = {
     "weight_decay":  5e-4,         # povecana regularizacija
     "grad_clip":     5.0,
     "min_height":    15,
-    "patience":      15,           # manji patience
+    "patience":      25,           # manji patience
     "save_every":    10,
     "use_amp":       True,
 }
@@ -121,9 +121,9 @@ def save_to_drive(local_path, name):
     try:
         drive_path = CONFIG["drive_backup_dir"] / name
         shutil.copy2(local_path, drive_path)
-        print(f"  📁 Backup na Drive: {drive_path}")
+        print(f"Backup na Drive: {drive_path}")
     except Exception as e:
-        print(f"  ⚠️  Drive backup nije uspeo: {e}")
+        print(f"Drive backup nije uspeo: {e}")
 
 
 def train():
