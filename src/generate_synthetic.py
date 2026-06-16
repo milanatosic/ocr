@@ -104,6 +104,39 @@ TEMPLATES_CYR_SHORT = [
     "ЈУЛ", "АВГУСТ", "СЕПТЕМБАР",
 ]
 
+TEMPLATES_RARE_CYR = [
+    # Слова Љ (nikad viđena u realnom datasetu)
+    "Поље", "Ваљево", "Краљево", "Недеља", "Земља", "Кљун",
+    "Пољопривреда", "Насеље", "Пољска", "Вољна",
+    # Слова Џ
+    "Наруџба", "Наруџбина", "Џак",
+    # Слова Ђ (samo 2 pojavljivanja u realnom datasetu)
+    "Ђорђе", "Ђурађ", "Ђак", "Ђубриво",
+    # Слова Ћ (samo 1 pojavljivanje)
+    "Ноћна тарифа", "Ноћни период", "Кућа", "Вреће",
+    # Velika latinična slova sa dijkritičima — Č i Đ nikad viđena
+    "Čačak", "Čovek", "Čist", "Čačanska banka",
+    "Šabac", "Šifra usluge",
+    "Žitište", "Žiro račun",
+    "Đorđević", "Đakovica", "Đurđevdan",
+    # Kombinacije koje pokrivaju više retkih slova
+    "Поље Ваљево", "Земља и насеље", "Краљево насеље",
+    "Čačak Šabac", "Žiro Đorđević",
+    "Ноћна потрошња", "Ноћни тарифни период",
+]
+
+TEMPLATES_NUMBERS_BALANCED = [
+    # Garantuju cifre 4, 6, 7, 8, 9 koje su najređe u realnom datasetu
+    "47.96", "74.83", "679.44", "87.54", "496.78",
+    "4.76", "97.84", "647.99", "746", "849",
+    "7/7", "48%", "96%", "74%", "67.89",
+    "487", "694", "879", "746", "968",
+    "14.07.2024.", "29.04.2023.", "17.06.2025.",
+    "49.99", "87", "64", "96", "74",
+    "467,89", "987,44", "746,00", "849,17",
+    "4.796,87", "6.748,99", "9.467,00",
+]
+
 TEMPLATES_LAT = [
     "Naziv i vrsta usluge", "Datum", "Količina", "Cena", "Iznos",
     "Naknada", "Usluga", "Popust", "Kamata", "Ukupna naknada", "PDV",
@@ -156,30 +189,34 @@ def random_number(template_type=None):
 
 def random_number_only():
     """Generiše samo numeričke labele — kratke kombinacije brojeva."""
+    # 20% vremena koristi balansiranu listu koja garantuje cifre 4,6,7,8,9
+    if random.random() < 0.20:
+        return random.choice(TEMPLATES_NUMBERS_BALANCED)
+
     choice = random.random()
     if choice < 0.3:
-        # Čist kratki broj (kakav se javlja u tabeli)
-        return str(random.randint(1, 9999))
+        # Kratki broj — izbegavamo previše nula: raspon počinje od 4
+        return str(random.randint(4, 9999))
     elif choice < 0.5:
         # Decimalni broj
         return f"{random.uniform(0.1, 9999.9):.2f}"
     elif choice < 0.65:
         # Srpski format sa zarezom
-        return f"{random.randint(1, 9999)},{random.randint(0, 99):02d}"
+        return f"{random.randint(4, 9999)},{random.randint(0, 99):02d}"
     elif choice < 0.75:
         # kWh vrednost
         return f"{random.uniform(1, 999):.2f} kWh"
     elif choice < 0.83:
-        # Datum
+        # Datum — biramo mesece 4–9 češće da pokrijemo te cifre
         d = random.randint(1, 28)
-        m = random.randint(1, 12)
+        m = random.choices(range(1, 13), weights=[1,1,1,2,2,2,2,2,2,1,1,1])[0]
         y = random.randint(2020, 2026)
         return f"{d:02d}.{m:02d}.{y}."
     elif choice < 0.90:
         # Procenat
         return f"{random.uniform(0.1, 100):.2f}%"
     elif choice < 0.95:
-        # Kombinacija sa dин
+        # Kombinacija sa дин
         return f"{random.uniform(1, 9999):.2f} дин"
     else:
         # ID broj
@@ -204,16 +241,18 @@ def random_text(script='cyr'):
 def random_text_short():
     """Kratke ćirilične reči — zaglavlja tabela."""
     choice = random.random()
-    if choice < 0.45:
+    if choice < 0.15:
+        # Retka slova Љ Џ Ђ Ћ i latinska dijkritika Č Š Ž Đ — eksplicitno
+        return random.choice(TEMPLATES_RARE_CYR)
+    elif choice < 0.52:
         return random.choice(TEMPLATES_CYR_SHORT)
-    elif choice < 0.70:
+    elif choice < 0.72:
         return f"{random.choice(TEMPLATES_CYR_SHORT)} {random_number('price')}"
-    elif choice < 0.85:
+    elif choice < 0.86:
         val = random.uniform(1, 999)
         unit = random.choice(["kWh", "дин", "din", "m2", "%", "дин."])
         return f"{random.choice(TEMPLATES_CYR_SHORT)} {val:.2f} {unit}"
     else:
-        # Kratka reč + kratak broj (kao u tabeli struja)
         return f"{random.choice(TEMPLATES_CYR_SHORT)} {random_number('plain')}"
 
 
@@ -414,6 +453,68 @@ def main():
             "racun_id": f"synth_lat_{i:05d}",
         })
 
+    # ── 5. Character floor — dopuni retke karaktere ───────────────────────────
+    # Za svaki karakter koji je ispod praga, generiši ciljane uzorke
+    CHAR_FLOOR = 150  # minimalni broj pojavljivanja po karakteru u sintetici
+    RARE_CHAR_WORDS = {
+        'Љ': ["Поље", "Недеља", "Ваљево", "Краљево", "Земља", "Насеље"],
+        'љ': ["поље", "недеља", "земља", "вољна", "биљка", "насеље"],
+        'Џ': ["Наруџба", "Наруџбина", "Џак"],
+        'џ': ["наруџба", "наруџбина"],
+        'Ђ': ["Ђорђе", "Ђурађ", "Ђак"],
+        'ђ': ["ђорђе", "ђак"],
+        'Ћ': ["Ноћна тарифа", "Ноћни период", "Кућа"],
+        'ћ': ["ноћна", "ноћни", "кућа", "вреће"],
+        'Č': ["Čačak", "Čovek", "Čačanska banka"],
+        'č': ["čačak", "čovek", "čist"],
+        'Š': ["Šabac", "Šifra usluge"],
+        'š': ["šifra", "šabac", "šalje"],
+        'Ž': ["Žitište", "Žiro račun"],
+        'ž': ["žiro", "žitište"],
+        'Đ': ["Đorđević", "Đakovica", "Đurđevdan"],
+        'đ': ["đorđević", "đakovica"],
+        'м': ["Место", "Матични", "Месец", "Молимо"],
+        'х': ["Химија", "Хотел", "Храна", "Хидро"],
+        'Ф': ["Фактура", "Фиксни", "Фонд"],
+        'ф': ["фактура", "фиксни", "фонд"],
+    }
+
+    from collections import Counter
+    current_counts = Counter()
+    for r in records:
+        current_counts.update(r['label'])
+
+    print(f"\nGenerisanje floor uzoraka (cilj: {CHAR_FLOOR} po karakteru)...")
+    floor_count = 0
+    for char, words in RARE_CHAR_WORDS.items():
+        deficit = CHAR_FLOOR - current_counts.get(char, 0)
+        if deficit <= 0:
+            continue
+        avg_char_per_word = sum(w.count(char) for w in words) / len(words)
+        samples_needed = max(1, int(deficit / max(avg_char_per_word, 1)))
+        for i in range(samples_needed):
+            text = random.choice(words)
+            font_path = random.choice(valid_bold_fonts)
+            font_size = random.randint(22, 36)
+            style = random.choices(
+                ['normal', 'table_header', 'table_row'],
+                weights=[0.5, 0.3, 0.2]
+            )[0]
+            img = render_text_image(text, font_path, font_size, style)
+            if img is None:
+                continue
+            img = add_realistic_noise(img)
+            filename = f"synth_floor_{floor_count:05d}.png"
+            cv2.imwrite(str(output_dir / filename), img)
+            records.append({
+                "image_path": f"synthetic/{filename}",
+                "label": text,
+                "racun_id": f"synth_floor_{floor_count:05d}",
+            })
+            current_counts.update(text)
+            floor_count += 1
+    print(f"  Floor uzorci generisani: {floor_count}")
+
     # ── Sačuvaj CSV ───────────────────────────────────────────────────────────
     df = pd.DataFrame(records)
     df.to_csv(CONFIG["output_csv"], index=False)
@@ -422,6 +523,7 @@ def main():
     n_short = sum(1 for r in records if 'short' in r['racun_id'])
     n_num = sum(1 for r in records if r['racun_id'].startswith('synth_num_'))
     n_lat = sum(1 for r in records if r['racun_id'].startswith('synth_lat_'))
+    n_floor = sum(1 for r in records if r['racun_id'].startswith('synth_floor_'))
 
     print(f"\n{'═'*60}")
     print(f"  GENERISANO {len(df)} SINTETIČKIH SLIKA")
@@ -430,6 +532,7 @@ def main():
     print(f"  Ćirilica (kratke):  {n_short}")
     print(f"  Brojevi:            {n_num}")
     print(f"  Latinica:           {n_lat}")
+    print(f"  Floor (retki karak.): {n_floor}")
     print(f"  Ukupno:             {len(df)}")
     print(f"  CSV: {CONFIG['output_csv']}")
 

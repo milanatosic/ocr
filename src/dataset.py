@@ -26,16 +26,77 @@ def encode_label(text):
     return [CHAR_TO_IDX[ch] for ch in text if ch in CHAR_TO_IDX]
 
 
-def decode_prediction(log_probs):
-    indices = np.argmax(log_probs, axis=1)
-    chars = []
-    prev_idx = -1
-    for idx in indices:
-        if idx != 0 and idx != prev_idx:
-            if idx in IDX_TO_CHAR:
-                chars.append(IDX_TO_CHAR[idx])
-        prev_idx = idx
-    return ''.join(chars)
+def decode_prediction(log_probs, beam_width=1):
+    """CTC decode. beam_width=1 je greedy (brz, za trening); beam_width>1 je beam search (bolji za kratke reči)."""
+    if beam_width <= 1:
+        indices = np.argmax(log_probs, axis=1)
+        chars = []
+        prev_idx = -1
+        for idx in indices:
+            if idx != 0 and idx != prev_idx:
+                if idx in IDX_TO_CHAR:
+                    chars.append(IDX_TO_CHAR[idx])
+            prev_idx = idx
+        return ''.join(chars)
+
+    # ── Beam search ───────────────────────────────────────────────────────────
+    T, C = log_probs.shape
+    NEG_INF = float('-inf')
+
+    def log_add(a, b):
+        if a == NEG_INF:
+            return b
+        if b == NEG_INF:
+            return a
+        m = max(a, b)
+        return m + np.log1p(np.exp(min(a, b) - m))
+
+    # beams: prefix_text -> [log_prob_ending_blank, log_prob_ending_nonblank]
+    beams = {'': [0.0, NEG_INF]}
+
+    for t in range(T):
+        new_beams = {}
+        lp = log_probs[t]
+
+        for prefix, (pb, pnb) in beams.items():
+            total = log_add(pb, pnb)
+            last_char = prefix[-1] if prefix else None
+
+            # Extend with blank → prefix ostaje isti
+            if prefix not in new_beams:
+                new_beams[prefix] = [NEG_INF, NEG_INF]
+            new_beams[prefix][0] = log_add(new_beams[prefix][0], total + lp[BLANK])
+
+            # Extend with non-blank character
+            for c in range(1, C):
+                char = IDX_TO_CHAR.get(c)
+                if char is None:
+                    continue
+                if char == last_char:
+                    # Isti karakter kao prethodni:
+                    # - iz blank-a → proširuje prefix (novi karakter)
+                    new_prefix = prefix + char
+                    if new_prefix not in new_beams:
+                        new_beams[new_prefix] = [NEG_INF, NEG_INF]
+                    new_beams[new_prefix][1] = log_add(new_beams[new_prefix][1], pb + lp[c])
+                    # - iz non-blank-a → ostaje isti prefix (merge)
+                    new_beams[prefix][1] = log_add(new_beams[prefix][1], pnb + lp[c])
+                else:
+                    # Različit karakter → uvek proširuje prefix
+                    new_prefix = prefix + char
+                    if new_prefix not in new_beams:
+                        new_beams[new_prefix] = [NEG_INF, NEG_INF]
+                    new_beams[new_prefix][1] = log_add(new_beams[new_prefix][1], total + lp[c])
+
+        beams = dict(
+            sorted(new_beams.items(),
+                   key=lambda x: log_add(x[1][0], x[1][1]),
+                   reverse=True)[:beam_width]
+        )
+
+    if not beams:
+        return ''
+    return max(beams.items(), key=lambda x: log_add(x[1][0], x[1][1]))[0]
 
 
 def augment_image(img):
