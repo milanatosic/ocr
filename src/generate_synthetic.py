@@ -19,7 +19,7 @@ CONFIG = {
     "num_samples_cyr":       200,   # duge ćirilične rečenice (smanjeno)
     "num_samples_cyr_short": 400,  # kratke ćirilične reči (povećano)
     "num_samples_numbers":   300,   # samo brojevi i kratke numeričke kombinacije
-    "num_samples_lat":       100,   # latinica (smanjeno)
+    "num_samples_lat":       200,   # latinica (smanjeno)
     "img_height":            48,
 }
 
@@ -146,6 +146,14 @@ TEMPLATES_NUMBERS_BALANCED = [
     # Sa zagradama
     "(100,00)", "(bez PDV)", "(sa PDV)", "(din)",
     "(dinara)", "(RSD)", "(ukupno)", "(neto)",
+    # Konfuzni parovi cifara: 1/7, 3/8, 4/9, 6/9
+    "17", "71", "37", "73", "38", "83", "47", "74", "69", "96",
+    "117", "171", "711", "337", "373", "733",
+    "138", "183", "318", "381", "813", "831",
+    "147", "174", "417", "471", "714", "741",
+    "169", "196", "619", "691", "916", "961",
+    "1.738", "3.847", "6.914", "7.431", "9.638",
+    "17,38", "38,47", "69,14", "74,31", "96,38",
 ]
 
 TEMPLATES_LAT = [
@@ -164,6 +172,21 @@ TEMPLATES_LAT = [
     "Snaga (kW)", "Energija (kWh)", "Potrošnja (kWh)",
     "Obračunska snaga (kW)", "Aktivna energija (kWh)",
     "Reaktivna energija (kWh)", "Vršna snaga (kW)",
+    # Ciljano za F, S, L, E, G, O, Z (najgori karakteri)
+    "Fiksna stopa", "Fond za osiguranje", "Faktura za gas",
+    "Fiksni i varijabilni deo", "Fond solidarnosti",
+    "Servisna lista", "Stopa PDV", "Saldo obaveze",
+    "Snaga i energija", "Stopa osiguranja", "Servis gasa",
+    "Lista stavki", "Lizing usluge", "Lokacija objekta",
+    "Električna energija i gas", "Energetska efikasnost",
+    "Evidencija potrošnje", "Efikasnost sistema",
+    "Godišnja stopa", "Grejanje i gas", "Godišnji obračun",
+    "Gas i struja", "Gubitak energije",
+    "Osnova za obračun", "Opis stavke", "Obračun gasa",
+    "Zbir stavki", "Zona isporuke", "Zarada po osnovu",
+    "Godišnji fond sati", "Osnov za fakturisanje",
+    "FIKSNI DEO", "SNAGA", "LISTA", "ENERGIJA", "GAS", "OSNOVA", "ZONA",
+    "FOND", "STOPA", "SERVIS", "GODIŠNJE", "EVIDENCIJA",
 ]
 
 
@@ -302,7 +325,20 @@ def render_text_image(text, font_path, font_size=32, style='normal'):
         text_color = random.randint(0, 80)
 
     img = Image.new('L', (img_w, img_h), bg_color)
+
+    # Papirna tekstura — šum na pozadini pre crtanja teksta
+    if style != 'dark_header' and random.random() < 0.7:
+        arr = np.array(img).astype(np.float32)
+        grain = np.random.normal(0, random.uniform(2, 7), arr.shape)
+        arr = np.clip(arr + grain, 0, 255).astype(np.uint8)
+        img = Image.fromarray(arr)
+
     draw = ImageDraw.Draw(img)
+
+    # Blago variranje boje mastila (printer neravnomerno nanosi mastilo)
+    if random.random() < 0.3:
+        text_color = max(0, min(255, text_color + random.randint(-15, 15)))
+
     draw.text((pad - bbox[0], pad - bbox[1]), text, fill=text_color, font=font)
     return np.array(img)
 
@@ -343,28 +379,53 @@ def add_realistic_noise(img):
             shadow = np.tile(grad.reshape(-1, 1), (1, w))
         img = np.clip(img.astype(np.float32) - shadow, 0, 255).astype(np.uint8)
 
-    # Šum
-    if random.random() < 0.5:
-        sigma = random.uniform(3, 12)
+    # Gaussov šum — širi opseg
+    if random.random() < 0.55:
+        sigma = random.uniform(3, 20)
         noise = np.random.normal(0, sigma, img.shape)
         img = np.clip(img.astype(np.float32) + noise, 0, 255).astype(np.uint8)
 
-    # Blur
+    # Salt and pepper šum — izolovani pikseli (artefakti skenera)
     if random.random() < 0.35:
+        amount = random.uniform(0.001, 0.012)
+        sp = np.random.random(img.shape)
+        img[sp < amount / 2] = 0
+        img[sp > 1 - amount / 2] = 255
+
+    # Neravnomerno osvetljenje — eliptična svetla/tamna mesta
+    if random.random() < 0.35:
+        cx = random.randint(0, w)
+        cy = random.randint(0, h)
+        rx = random.randint(w // 3, w * 2)
+        ry = random.randint(h, h * 4)
+        intensity = random.randint(-30, 30)
+        Y, X = np.ogrid[:h, :w]
+        mask = ((X - cx) ** 2 / rx ** 2 + (Y - cy) ** 2 / ry ** 2) <= 1
+        img = np.clip(img.astype(np.float32) + mask * intensity, 0, 255).astype(np.uint8)
+
+    # Horizontalne pruge skenera
+    if random.random() < 0.2:
+        for _ in range(random.randint(1, 3)):
+            y = random.randint(0, h - 1)
+            streak = random.randint(-40, -10)
+            img[y] = np.clip(img[y].astype(np.int32) + streak, 0, 255).astype(np.uint8)
+
+    # Blur
+    if random.random() < 0.4:
         k = random.choice([3, 5])
         img = cv2.GaussianBlur(img, (k, k), 0)
 
-    # Erozija/dilatacija — simulira loš printer ili blur mastila
-    if random.random() < 0.25:
+    # Erozija/dilatacija — simulira loš printer ili razlivanje mastila
+    if random.random() < 0.3:
         kernel = np.ones((2, 2), np.uint8)
         if random.random() < 0.5:
             img = cv2.erode(img, kernel, iterations=1)
         else:
             img = cv2.dilate(img, kernel, iterations=1)
 
-    # JPEG kompresija — niži kvalitet nego pre
-    if random.random() < 0.35:
-        q = random.randint(45, 85)
+    # JPEG kompresija — simulira loše skenove
+    if random.random() < 0.45:
+        q = random.randint(30, 85)
         _, buf = cv2.imencode(".jpg", img, [int(cv2.IMWRITE_JPEG_QUALITY), q])
         decoded = cv2.imdecode(buf, cv2.IMREAD_GRAYSCALE)
         if decoded is not None:
