@@ -19,7 +19,7 @@ CONFIG = {
     "num_samples_cyr":       200,   # duge ćirilične rečenice (smanjeno)
     "num_samples_cyr_short": 400,  # kratke ćirilične reči (povećano)
     "num_samples_numbers":   300,   # samo brojevi i kratke numeričke kombinacije
-    "num_samples_lat":       200,   # latinica (smanjeno)
+    "num_samples_lat":       100,   # latinica (smanjeno)
     "img_height":            48,
 }
 
@@ -84,6 +84,7 @@ TEMPLATES_CYR_SHORT = [
     # Kratke kombinacije (2-3 reči)
     "Цена по", "Број дана", "Датум од", "Датум до",
     "Плава зона", "Црвена зона", "Зелена зона",
+    "Зелена зона", "Плава зона",
     # Termini sa struja računa
     "Утрошено", "јединици", "динара", "(динара)",
     "ТАРИФА", "Тарифа",
@@ -92,7 +93,7 @@ TEMPLATES_CYR_SHORT = [
     "(kW/kWh)", "kWh", "kW", "MWh", "MW", "дин",
     # Više primera sa словом Ц
     "Цена по јединици", "Цена без ПДВ", "Малопродајна цена",
-    "Цене", "ЦЕНА", "Укупна цена",
+    "Цене", "ЦЕНА", "Цена по", "Укупна цена",
     "Цена са ПДВ", "Јединична цена",
     # ALL CAPS naslovi
     "РАЧУН ЗА ЕЛЕКТРИЧНУ ЕНЕРГИЈУ",
@@ -145,14 +146,6 @@ TEMPLATES_NUMBERS_BALANCED = [
     # Sa zagradama
     "(100,00)", "(bez PDV)", "(sa PDV)", "(din)",
     "(dinara)", "(RSD)", "(ukupno)", "(neto)",
-    # Konfuzni parovi cifara: 1/7, 3/8, 4/9, 6/9
-    "17", "71", "37", "73", "38", "83", "47", "74", "69", "96",
-    "117", "171", "711", "337", "373", "733",
-    "138", "183", "318", "381", "813", "831",
-    "147", "174", "417", "471", "714", "741",
-    "169", "196", "619", "691", "916", "961",
-    "1.738", "3.847", "6.914", "7.431", "9.638",
-    "17,38", "38,47", "69,14", "74,31", "96,38",
 ]
 
 TEMPLATES_LAT = [
@@ -171,21 +164,6 @@ TEMPLATES_LAT = [
     "Snaga (kW)", "Energija (kWh)", "Potrošnja (kWh)",
     "Obračunska snaga (kW)", "Aktivna energija (kWh)",
     "Reaktivna energija (kWh)", "Vršna snaga (kW)",
-    # Ciljano za F, S, L, E, G, O, Z (najgori karakteri)
-    "Fiksna stopa", "Fond za osiguranje", "Faktura za gas",
-    "Fiksni i varijabilni deo", "Fond solidarnosti",
-    "Servisna lista", "Stopa PDV", "Saldo obaveze",
-    "Snaga i energija", "Stopa osiguranja", "Servis gasa",
-    "Lista stavki", "Lizing usluge", "Lokacija objekta",
-    "Električna energija i gas", "Energetska efikasnost",
-    "Evidencija potrošnje", "Efikasnost sistema",
-    "Godišnja stopa", "Grejanje i gas", "Godišnji obračun",
-    "Gas i struja", "Gubitak energije",
-    "Osnova za obračun", "Opis stavke", "Obračun gasa",
-    "Zbir stavki", "Zona isporuke", "Zarada po osnovu",
-    "Godišnji fond sati", "Osnov za fakturisanje",
-    "FIKSNI DEO", "SNAGA", "LISTA", "ENERGIJA", "GAS", "OSNOVA", "ZONA",
-    "FOND", "STOPA", "SERVIS", "GODIŠNJE", "EVIDENCIJA",
 ]
 
 
@@ -293,6 +271,53 @@ def random_text_short():
         return f"{random.choice(TEMPLATES_CYR_SHORT)} {random_number('plain')}"
 
 
+def generate_background(w, h, base, style):
+    bg = np.full((h, w), base, dtype=np.float32)
+
+    if style == 'dark_header':
+        grain = np.random.normal(0, random.uniform(1, 4), (h, w))
+        return np.clip(bg + grain, 0, 255).astype(np.uint8)
+
+    bg_type = random.random()
+
+    if bg_type < 0.20:
+        # Horizontalni gradijent — svetlije s jedne strane
+        grad = np.linspace(random.randint(5, 25), 0, w, dtype=np.float32)
+        bg -= np.tile(grad, (h, 1))
+    elif bg_type < 0.38:
+        # Vertikalni gradijent
+        grad = np.linspace(random.randint(5, 20), 0, h, dtype=np.float32)
+        bg -= np.tile(grad.reshape(-1, 1), (1, w))
+    elif bg_type < 0.50:
+        # Postarela/požutela hartija — tamnija osnova
+        bg = np.full((h, w), random.randint(195, 225), dtype=np.float32)
+    elif bg_type < 0.62:
+        # Dijagonalni gradijent
+        gx = np.linspace(0, random.randint(8, 20), w, dtype=np.float32)
+        gy = np.linspace(0, random.randint(5, 15), h, dtype=np.float32)
+        bg -= np.outer(gy, np.ones(w)) + np.outer(np.ones(h), gx)
+
+    # Niskofrekventna tekstura — mrlje svetline kao na pravom papiru
+    if random.random() < 0.55:
+        th = max(2, h // 3)
+        tw = max(2, w // 3)
+        blob = np.random.normal(0, random.uniform(4, 12), (th, tw)).astype(np.float32)
+        blob = cv2.resize(blob, (w, h), interpolation=cv2.INTER_LINEAR)
+        bg = np.clip(bg + blob, 0, 255)
+
+    # Papirno zrno
+    grain = np.random.normal(0, random.uniform(2, 7), (h, w))
+    bg = np.clip(bg + grain, 0, 255)
+
+    # Povremene horizontalne linije (fotokopija)
+    if random.random() < 0.12:
+        for _ in range(random.randint(1, 2)):
+            y = random.randint(0, h - 1)
+            bg[y] = np.clip(bg[y] - random.randint(10, 30), 0, 255)
+
+    return bg.astype(np.uint8)
+
+
 def render_text_image(text, font_path, font_size=32, style='normal'):
     try:
         font = ImageFont.truetype(font_path, font_size)
@@ -308,33 +333,25 @@ def render_text_image(text, font_path, font_size=32, style='normal'):
     img_h = text_h + 2 * pad
 
     if style == 'normal':
-        bg_color = random.randint(230, 255)
+        bg_base = random.randint(215, 255)
         text_color = random.randint(0, 60)
     elif style == 'table_header':
-        bg_color = random.randint(190, 225)
+        bg_base = random.randint(185, 225)
         text_color = random.randint(0, 50)
     elif style == 'table_row':
-        bg_color = random.randint(235, 250)
+        bg_base = random.randint(220, 252)
         text_color = random.randint(10, 60)
     elif style == 'dark_header':
-        bg_color = random.randint(30, 80)
+        bg_base = random.randint(30, 80)
         text_color = random.randint(200, 255)
     else:
-        bg_color = random.randint(220, 255)
+        bg_base = random.randint(210, 255)
         text_color = random.randint(0, 80)
 
-    img = Image.new('L', (img_w, img_h), bg_color)
-
-    # Papirna tekstura — šum na pozadini pre crtanja teksta
-    if style != 'dark_header' and random.random() < 0.7:
-        arr = np.array(img).astype(np.float32)
-        grain = np.random.normal(0, random.uniform(2, 7), arr.shape)
-        arr = np.clip(arr + grain, 0, 255).astype(np.uint8)
-        img = Image.fromarray(arr)
-
+    bg = generate_background(img_w, img_h, bg_base, style)
+    img = Image.fromarray(bg)
     draw = ImageDraw.Draw(img)
 
-    # Blago variranje boje mastila (printer neravnomerno nanosi mastilo)
     if random.random() < 0.3:
         text_color = max(0, min(255, text_color + random.randint(-15, 15)))
 
@@ -378,52 +395,27 @@ def add_realistic_noise(img):
             shadow = np.tile(grad.reshape(-1, 1), (1, w))
         img = np.clip(img.astype(np.float32) - shadow, 0, 255).astype(np.uint8)
 
-    # Gaussov šum — širi opseg
-    if random.random() < 0.55:
-        sigma = random.uniform(3, 20)
+    # Šum
+    if random.random() < 0.5:
+        sigma = random.uniform(3, 12)
         noise = np.random.normal(0, sigma, img.shape)
         img = np.clip(img.astype(np.float32) + noise, 0, 255).astype(np.uint8)
 
-    # Salt and pepper šum — izolovani pikseli (artefakti skenera)
-    if random.random() < 0.2:
-        amount = random.uniform(0.001, 0.006)
-        sp = np.random.random(img.shape)
-        img[sp < amount / 2] = 0
-        img[sp > 1 - amount / 2] = 255
-
-    # Neravnomerno osvetljenje — eliptična svetla/tamna mesta
-    if random.random() < 0.35:
-        cx = random.randint(0, w)
-        cy = random.randint(0, h)
-        rx = random.randint(w // 3, w * 2)
-        ry = random.randint(h, h * 4)
-        intensity = random.randint(-30, 30)
-        Y, X = np.ogrid[:h, :w]
-        mask = ((X - cx) ** 2 / rx ** 2 + (Y - cy) ** 2 / ry ** 2) <= 1
-        img = np.clip(img.astype(np.float32) + mask * intensity, 0, 255).astype(np.uint8)
-
-    # Horizontalne pruge skenera
-    if random.random() < 0.2:
-        for _ in range(random.randint(1, 3)):
-            y = random.randint(0, h - 1)
-            streak = random.randint(-40, -10)
-            img[y] = np.clip(img[y].astype(np.int32) + streak, 0, 255).astype(np.uint8)
-
     # Blur
-    if random.random() < 0.4:
+    if random.random() < 0.35:
         k = random.choice([3, 5])
         img = cv2.GaussianBlur(img, (k, k), 0)
 
-    # Erozija/dilatacija — simulira loš printer ili razlivanje mastila
-    if random.random() < 0.3:
+    # Erozija/dilatacija — simulira loš printer ili blur mastila
+    if random.random() < 0.25:
         kernel = np.ones((2, 2), np.uint8)
         if random.random() < 0.5:
             img = cv2.erode(img, kernel, iterations=1)
         else:
             img = cv2.dilate(img, kernel, iterations=1)
 
-    # JPEG kompresija — simulira loše skenove
-    if random.random() < 0.4:
+    # JPEG kompresija — niži kvalitet nego pre
+    if random.random() < 0.35:
         q = random.randint(45, 85)
         _, buf = cv2.imencode(".jpg", img, [int(cv2.IMWRITE_JPEG_QUALITY), q])
         decoded = cv2.imdecode(buf, cv2.IMREAD_GRAYSCALE)

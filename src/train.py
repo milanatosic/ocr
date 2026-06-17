@@ -32,12 +32,12 @@ CONFIG = {
     "num_lstm_layers": 2,
 
     "batch_size":    32,
-    "num_epochs":    200,          # više epoha (bilo 100)
-    "learning_rate": 3e-4,         # smanjen LR
-    "weight_decay":  5e-4,         # povecana regularizacija
+    "num_epochs":    200,          
+    "learning_rate": 3e-4,         
+    "weight_decay":  5e-4,         
     "grad_clip":     5.0,
     "min_height":    15,
-    "patience":      25,           # manji patience
+    "patience":      25,           
     "save_every":    10,
     "use_amp":       True,
 }
@@ -156,8 +156,15 @@ def train():
     ctc_loss = nn.CTCLoss(blank=0, reduction='mean', zero_infinity=True)
     optimizer = optim.AdamW(model.parameters(), lr=CONFIG["learning_rate"],
                             weight_decay=CONFIG["weight_decay"])
-    scheduler = optim.lr_scheduler.CosineAnnealingLR(
-        optimizer, T_max=CONFIG["num_epochs"], eta_min=1e-6
+    warmup_epochs = 8
+    warmup_scheduler = optim.lr_scheduler.LinearLR(
+        optimizer, start_factor=1/warmup_epochs, end_factor=1.0, total_iters=warmup_epochs
+    )
+    cosine_scheduler = optim.lr_scheduler.CosineAnnealingLR(
+        optimizer, T_max=CONFIG["num_epochs"] - warmup_epochs, eta_min=1e-6
+    )
+    scheduler = optim.lr_scheduler.SequentialLR(
+        optimizer, schedulers=[warmup_scheduler, cosine_scheduler], milestones=[warmup_epochs]
     )
     scaler = GradScaler('cuda', enabled=CONFIG["use_amp"])
 
