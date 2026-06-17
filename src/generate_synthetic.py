@@ -84,7 +84,6 @@ TEMPLATES_CYR_SHORT = [
     # Kratke kombinacije (2-3 reči)
     "Цена по", "Број дана", "Датум од", "Датум до",
     "Плава зона", "Црвена зона", "Зелена зона",
-    "Зелена зона", "Плава зона",
     # Termini sa struja računa
     "Утрошено", "јединици", "динара", "(динара)",
     "ТАРИФА", "Тарифа",
@@ -93,7 +92,7 @@ TEMPLATES_CYR_SHORT = [
     "(kW/kWh)", "kWh", "kW", "MWh", "MW", "дин",
     # Više primera sa словом Ц
     "Цена по јединици", "Цена без ПДВ", "Малопродајна цена",
-    "Цене", "ЦЕНА", "Цена по", "Укупна цена",
+    "Цене", "ЦЕНА", "Укупна цена",
     "Цена са ПДВ", "Јединична цена",
     # ALL CAPS naslovi
     "РАЧУН ЗА ЕЛЕКТРИЧНУ ЕНЕРГИЈУ",
@@ -386,8 +385,8 @@ def add_realistic_noise(img):
         img = np.clip(img.astype(np.float32) + noise, 0, 255).astype(np.uint8)
 
     # Salt and pepper šum — izolovani pikseli (artefakti skenera)
-    if random.random() < 0.35:
-        amount = random.uniform(0.001, 0.012)
+    if random.random() < 0.2:
+        amount = random.uniform(0.001, 0.006)
         sp = np.random.random(img.shape)
         img[sp < amount / 2] = 0
         img[sp > 1 - amount / 2] = 255
@@ -424,8 +423,8 @@ def add_realistic_noise(img):
             img = cv2.dilate(img, kernel, iterations=1)
 
     # JPEG kompresija — simulira loše skenove
-    if random.random() < 0.45:
-        q = random.randint(30, 85)
+    if random.random() < 0.4:
+        q = random.randint(45, 85)
         _, buf = cv2.imencode(".jpg", img, [int(cv2.IMWRITE_JPEG_QUALITY), q])
         decoded = cv2.imdecode(buf, cv2.IMREAD_GRAYSCALE)
         if decoded is not None:
