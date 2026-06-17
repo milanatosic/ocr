@@ -94,7 +94,7 @@ TEMPLATES_CYR_SHORT = [
     # Više primera sa словом Ц
     "Цена по јединици", "Цена без ПДВ", "Малопродајна цена",
     "Цене", "ЦЕНА", "Цена по", "Укупна цена",
-    "Цена са ПДВ", "Јединична цена", "Ценити", "Целост", "Цеца", 
+    "Цена са ПДВ", "Јединична цена",
     # ALL CAPS naslovi
     "РАЧУН ЗА ЕЛЕКТРИЧНУ ЕНЕРГИЈУ",
     "ПОТРОШЊА У ОБРАЧУНСКОМ ПЕРИОДУ",
@@ -159,10 +159,7 @@ TEMPLATES_LAT = [
     "Odnošenje smeća", "Kablovska televizija", "Internet usluga",
     "Telefonska usluga", "Porez na imovinu", "Komunalna taksa",
     "Ukupno za račun", "Iznos bez PDV", "Stopa PDV", "Osnovica",
-    "Fiksni deo", "Varijabilni deo", "Tarifa", "Šešir", "Šišati", "Škola", "Školovanje",
-    "Šminka", "miš u šupi", "Školjka", "Loša fora", "Luftika", "folklor", "faliti", "forsirati",
-    "Šasija", "Logika", "Lampa", "Lopata", "Grejanje", "Gubitak", "Gordost", "Gas", "Radni", "Ručni",
-    "Raspust", 
+    "Fiksni deo", "Varijabilni deo", "Tarifa",
     # kW/kWh u kontekstu
     "Snaga (kW)", "Energija (kWh)", "Potrošnja (kWh)",
     "Obračunska snaga (kW)", "Aktivna energija (kWh)",
