@@ -374,6 +374,9 @@ def add_realistic_noise(img):
 
 
 def main():
+    random.seed(42)
+    np.random.seed(42)
+
     output_dir = CONFIG["output_dir"]
     output_dir.mkdir(exist_ok=True, parents=True)
 
