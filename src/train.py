@@ -156,15 +156,8 @@ def train():
     ctc_loss = nn.CTCLoss(blank=0, reduction='mean', zero_infinity=True)
     optimizer = optim.AdamW(model.parameters(), lr=CONFIG["learning_rate"],
                             weight_decay=CONFIG["weight_decay"])
-    warmup_epochs = 8
-    warmup_scheduler = optim.lr_scheduler.LinearLR(
-        optimizer, start_factor=1/warmup_epochs, end_factor=1.0, total_iters=warmup_epochs
-    )
-    cosine_scheduler = optim.lr_scheduler.CosineAnnealingLR(
-        optimizer, T_max=CONFIG["num_epochs"] - warmup_epochs, eta_min=1e-6
-    )
-    scheduler = optim.lr_scheduler.SequentialLR(
-        optimizer, schedulers=[warmup_scheduler, cosine_scheduler], milestones=[warmup_epochs]
+    scheduler = optim.lr_scheduler.CosineAnnealingLR(
+        optimizer, T_max=CONFIG["num_epochs"], eta_min=1e-6
     )
     scaler = GradScaler('cuda', enabled=CONFIG["use_amp"])
 
@@ -236,7 +229,7 @@ def train():
             patience_counter = 0
             best_path = CONFIG["output_dir"] / "best_ocr_model.pt"
             torch.save(model.state_dict(), best_path)
-            print(f"  → Novi best model (val_loss: {best_val_loss:.4f})")
+            print(f"  → NOVI BEST MODEL (val_loss: {best_val_loss:.4f})")
             save_to_drive(best_path, "best_ocr_model.pt")
         else:
             patience_counter += 1

@@ -271,53 +271,6 @@ def random_text_short():
         return f"{random.choice(TEMPLATES_CYR_SHORT)} {random_number('plain')}"
 
 
-def generate_background(w, h, base, style):
-    bg = np.full((h, w), base, dtype=np.float32)
-
-    if style == 'dark_header':
-        grain = np.random.normal(0, random.uniform(1, 4), (h, w))
-        return np.clip(bg + grain, 0, 255).astype(np.uint8)
-
-    bg_type = random.random()
-
-    if bg_type < 0.20:
-        # Horizontalni gradijent — svetlije s jedne strane
-        grad = np.linspace(random.randint(5, 25), 0, w, dtype=np.float32)
-        bg -= np.tile(grad, (h, 1))
-    elif bg_type < 0.38:
-        # Vertikalni gradijent
-        grad = np.linspace(random.randint(5, 20), 0, h, dtype=np.float32)
-        bg -= np.tile(grad.reshape(-1, 1), (1, w))
-    elif bg_type < 0.50:
-        # Postarela/požutela hartija — tamnija osnova
-        bg = np.full((h, w), random.randint(195, 225), dtype=np.float32)
-    elif bg_type < 0.62:
-        # Dijagonalni gradijent
-        gx = np.linspace(0, random.randint(8, 20), w, dtype=np.float32)
-        gy = np.linspace(0, random.randint(5, 15), h, dtype=np.float32)
-        bg -= np.outer(gy, np.ones(w)) + np.outer(np.ones(h), gx)
-
-    # Niskofrekventna tekstura — mrlje svetline kao na pravom papiru
-    if random.random() < 0.55:
-        th = max(2, h // 3)
-        tw = max(2, w // 3)
-        blob = np.random.normal(0, random.uniform(4, 12), (th, tw)).astype(np.float32)
-        blob = cv2.resize(blob, (w, h), interpolation=cv2.INTER_LINEAR)
-        bg = np.clip(bg + blob, 0, 255)
-
-    # Papirno zrno
-    grain = np.random.normal(0, random.uniform(2, 7), (h, w))
-    bg = np.clip(bg + grain, 0, 255)
-
-    # Povremene horizontalne linije (fotokopija)
-    if random.random() < 0.12:
-        for _ in range(random.randint(1, 2)):
-            y = random.randint(0, h - 1)
-            bg[y] = np.clip(bg[y] - random.randint(10, 30), 0, 255)
-
-    return bg.astype(np.uint8)
-
-
 def render_text_image(text, font_path, font_size=32, style='normal'):
     try:
         font = ImageFont.truetype(font_path, font_size)
@@ -333,28 +286,23 @@ def render_text_image(text, font_path, font_size=32, style='normal'):
     img_h = text_h + 2 * pad
 
     if style == 'normal':
-        bg_base = random.randint(215, 255)
+        bg_color = random.randint(230, 255)
         text_color = random.randint(0, 60)
     elif style == 'table_header':
-        bg_base = random.randint(185, 225)
+        bg_color = random.randint(190, 225)
         text_color = random.randint(0, 50)
     elif style == 'table_row':
-        bg_base = random.randint(220, 252)
+        bg_color = random.randint(235, 250)
         text_color = random.randint(10, 60)
     elif style == 'dark_header':
-        bg_base = random.randint(30, 80)
+        bg_color = random.randint(30, 80)
         text_color = random.randint(200, 255)
     else:
-        bg_base = random.randint(210, 255)
+        bg_color = random.randint(220, 255)
         text_color = random.randint(0, 80)
 
-    bg = generate_background(img_w, img_h, bg_base, style)
-    img = Image.fromarray(bg)
+    img = Image.new('L', (img_w, img_h), bg_color)
     draw = ImageDraw.Draw(img)
-
-    if random.random() < 0.3:
-        text_color = max(0, min(255, text_color + random.randint(-15, 15)))
-
     draw.text((pad - bbox[0], pad - bbox[1]), text, fill=text_color, font=font)
     return np.array(img)
 
