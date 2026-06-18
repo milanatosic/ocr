@@ -38,10 +38,10 @@ CONFIG = {
     "hidden_size":   256,
     "num_lstm_layers": 2,
 
-    "batch_size":    64,
+    "batch_size":    32,
     "num_epochs":    200,
-    "learning_rate": 5e-4,
-    "weight_decay":  1e-3,         
+    "learning_rate": 3e-4,
+    "weight_decay":  5e-4,         
     "grad_clip":     5.0,
     "min_height":    15,
     "patience":      40,           
