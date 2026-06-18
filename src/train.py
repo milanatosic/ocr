@@ -168,6 +168,7 @@ def train():
     )
     scaler = GradScaler('cuda', enabled=CONFIG["use_amp"])
 
+    best_val_cer = float('inf')
     best_val_loss = float('inf')
     patience_counter = 0
     history = {"train_loss": [], "val_loss": [], "val_cer": []}
@@ -231,13 +232,16 @@ def train():
             torch.save({"epoch": epoch, "model": model.state_dict(),
                         "val_loss": float(val_loss), "val_cer": float(val_cer)}, ckpt_path)
 
+        if val_cer < best_val_cer:
+            best_val_cer = val_cer
+            best_path = CONFIG["output_dir"] / "best_ocr_model.pt"
+            torch.save(model.state_dict(), best_path)
+            print(f"  → NOVI BEST MODEL (val_cer: {best_val_cer:.4f})")
+            save_to_drive(best_path, "best_ocr_model.pt")
+
         if val_loss < best_val_loss:
             best_val_loss = val_loss
             patience_counter = 0
-            best_path = CONFIG["output_dir"] / "best_ocr_model.pt"
-            torch.save(model.state_dict(), best_path)
-            print(f"  → NOVI BEST MODEL (val_loss: {best_val_loss:.4f})")
-            save_to_drive(best_path, "best_ocr_model.pt")
         else:
             patience_counter += 1
             if patience_counter >= CONFIG["patience"]:
