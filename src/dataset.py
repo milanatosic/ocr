@@ -91,8 +91,9 @@ def preprocess_image(img_bgr, target_height=IMG_HEIGHT, max_width=IMG_WIDTH):
 
 
 class OCRDataset(Dataset):
-    def __init__(self, csv_path, base_dir, min_height=15, augment=False):
+    def __init__(self, csv_path, base_dir, img_height=IMG_HEIGHT, min_height=15, augment=False):
         self.base_dir = Path(base_dir)
+        self.img_height = img_height
         self.augment = augment
 
         df = pd.read_csv(csv_path)
@@ -132,7 +133,7 @@ class OCRDataset(Dataset):
         if self.augment:
             img = self._augment(img)
 
-        processed, valid_width = preprocess_image(img)
+        processed, valid_width = preprocess_image(img, target_height=self.img_height)
         if processed is None:
             processed = np.zeros((IMG_HEIGHT, IMG_WIDTH), dtype=np.float32)
             valid_width = IMG_WIDTH
