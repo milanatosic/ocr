@@ -49,7 +49,7 @@ def predict(model, img_path):
         log_probs = torch.nn.functional.log_softmax(logits, dim=2)
         log_probs_np = log_probs.squeeze(1).cpu().numpy()               # [T, C]
 
-    return decode_prediction(log_probs_np, beam_width=10)
+    return decode_prediction(log_probs_np)
 
 
 if __name__ == "__main__":
