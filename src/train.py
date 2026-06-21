@@ -177,18 +177,17 @@ def train():
         for batch in tqdm(train_loader, desc=f"Epoha {epoch}", ncols=80):
             if batch[0] is None:
                 continue
-            imgs, labels, label_lengths, _ = batch
+            imgs, labels, label_lengths, input_lengths, _ = batch
             imgs = imgs.to(device)
             labels = labels.to(device)
             label_lengths = label_lengths.to(device)
+            input_lengths = input_lengths.to(device)
 
             optimizer.zero_grad()
 
             with autocast('cuda', enabled=CONFIG["use_amp"]):
                 logits = model(imgs)
-                T, B, C = logits.shape
                 log_probs = torch.nn.functional.log_softmax(logits, dim=2)
-                input_lengths = torch.full((B,), T, dtype=torch.long, device=device)
                 loss = ctc_loss(log_probs, labels, input_lengths, label_lengths)
 
             if not torch.isnan(loss) and not torch.isinf(loss):

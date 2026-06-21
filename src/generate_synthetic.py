@@ -19,7 +19,7 @@ CONFIG = {
     "num_samples_cyr":       200,   # duge ćirilične rečenice (smanjeno)
     "num_samples_cyr_short": 400,  # kratke ćirilične reči (povećano)
     "num_samples_numbers":   300,   # samo brojevi i kratke numeričke kombinacije
-    "num_samples_lat":       100,   # latinica (smanjeno)
+    "num_samples_lat":       300,   # latinica (smanjeno)
     "img_height":            48,
 }
 
