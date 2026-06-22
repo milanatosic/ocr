@@ -34,9 +34,9 @@ output_rows/
 canvas_states/
 
 # YOLO slike (skloniti sa gita, skinuti posebno)
-Inteligentni-sistemi-4/train/images/
-Inteligentni-sistemi-4/valid/
-Inteligentni-sistemi-4/test/
+yolo_dataset/train/images/
+yolo_dataset/valid/
+yolo_dataset/test/
 
 # Sintetičke slike (mogu se regenerisati skriptom)
 synthetic/*.jpg
