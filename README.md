@@ -35,8 +35,8 @@ ocr/
 ## Instalacija
 
 ```bash
-git clone <url-repozitorijuma>
-cd ocr
+git clone https://github.com/milanatosic/is_projekat
+cd is_projekat
 python -m venv .venv
 source .venv/bin/activate      # Linux/Mac
 # .venv\Scripts\activate       # Windows
@@ -73,7 +73,7 @@ python src/train.py
 
 ```python
 # Na početku Colab sveske:
-git clone <url-repozitorijuma> /content/is_projekat
+git clone https://github.com/milanatosic/is_projekat /content/is_projekat
 %cd /content/is_projekat
 pip install opencv-python-headless pillow pandas tqdm
 
