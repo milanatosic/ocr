@@ -103,8 +103,8 @@ Dataset mora biti preuzet sa Roboflow-a i smešten u `yolo_dataset/` (slike u `y
 
 | Metrika | Vrednost |
 |---|---|
-| CER (Character Error Rate) 
-| WER (Word Error Rate) 
-| Tačno prepoznatih 
+| CER (Character Error Rate) |4.89%|
+| WER (Word Error Rate) |18.42%|
+| Tačno prepoznatih |67.57%|
 
 Evaluacija na test skupu od 183 slike, grupisane po tipu računa (struja, MTS, grejanje, smeće, održavanje zgrade, jotel, uplatnica).
