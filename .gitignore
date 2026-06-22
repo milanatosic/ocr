@@ -1,4 +1,4 @@
-# Python-generated files
+# Python
 __pycache__/
 *.py[oc]
 build/
@@ -6,19 +6,52 @@ dist/
 wheels/
 *.egg-info
 
-# Virtual environments
-.venv
+# Virtuelna okruženja
+.venv/
+env/
 
 # Težine modela
 *.pth
 *.pt
 *.h5
 
+# Slike i mediji
 *.jpg
-*.json
-*.jepg
+*.jpeg
 *.png
+*.gif
+*.bmp
+*.tiff
 
+# Originalni računi (lični podaci)
+originalne_slike/
+
+# Generisani cropovi (mogu se regenerisati)
+output/
+output_rows/
+
+# Stanja Streamlit alata
+canvas_states/
+
+# YOLO slike (skloniti sa gita, skinuti posebno)
+Inteligentni-sistemi-4/train/images/
+Inteligentni-sistemi-4/valid/
+Inteligentni-sistemi-4/test/
+
+# Sintetičke slike (mogu se regenerisati skriptom)
+synthetic/*.jpg
+synthetic/*.png
+
+# Arhive i veliki fajlovi
+*.tar.gz
+*.zip
+*.tar
+
+# CSV koji se generiše automatski
+dataset.csv
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# Ostalo
 provera.py
-
-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
